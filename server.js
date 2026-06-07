@@ -1,20 +1,22 @@
-import express from 'express'
-import { fileURLToPath } from 'node:url'
-import { dirname, join } from 'node:path'
+// Production entry point for Node hosting (e.g. Hostinger / Passenger).
+// Boots Next.js programmatically and listens on the port provided by the host.
+const { createServer } = require("node:http");
+const next = require("next");
 
-const __dirname = dirname(fileURLToPath(import.meta.url))
-const distDir = join(__dirname, 'dist')
-const port = process.env.PORT || 3000
+const port = Number(process.env.PORT) || 3000;
+const hostname = process.env.HOST || "0.0.0.0";
 
-const app = express()
+const app = next({ dev: false, hostname, port });
+const handle = app.getRequestHandler();
 
-app.use(express.static(distDir))
-
-// SPA fallback: serve index.html for any unmatched route
-app.use((_req, res) => {
-  res.sendFile(join(distDir, 'index.html'))
-})
-
-app.listen(port, () => {
-  console.log(`MIRRAI server running on port ${port}`)
-})
+app
+  .prepare()
+  .then(() => {
+    createServer((req, res) => handle(req, res)).listen(port, () => {
+      console.log(`MIRRAI ready on http://${hostname}:${port}`);
+    });
+  })
+  .catch((err) => {
+    console.error("Failed to start MIRRAI server:", err);
+    process.exit(1);
+  });

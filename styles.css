@@ -1,0 +1,95 @@
+/**
+ * Mirrai polish snippets (reference).
+ * The live app loads Tailwind + rules from app/globals.css — keep these blocks in sync when editing.
+ */
+
+.hero-headline-warm-gold {
+  color: #c9a96e;
+}
+
+@keyframes mirror-prompt-glow-prominent {
+  0%,
+  100% {
+    box-shadow:
+      0 0.35rem 1.25rem rgba(0, 0, 0, 0.08),
+      inset 0 1px 0 rgba(255, 255, 255, 0.75),
+      0 0 0 0 rgba(255, 215, 160, 0),
+      0 0 28px 12px rgba(201, 169, 110, 0.42),
+      0 0 56px 28px rgba(201, 169, 110, 0.22),
+      0 0 88px 40px rgba(255, 236, 200, 0.12);
+  }
+
+  50% {
+    box-shadow:
+      0 0.35rem 1.25rem rgba(0, 0, 0, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.88),
+      0 0 0 14px rgba(255, 228, 188, 0.55),
+      0 0 42px 18px rgba(201, 169, 110, 0.62),
+      0 0 72px 34px rgba(255, 220, 170, 0.35),
+      0 0 104px 52px rgba(201, 169, 110, 0.18);
+  }
+}
+
+section.interaction-demo-section .mirror-press-prompt {
+  animation: mirror-prompt-glow-prominent 2.2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  section.interaction-demo-section .mirror-press-prompt {
+    animation: none;
+    transform: translate(-50%, -50%) scale(var(--try-me-scale));
+    box-shadow:
+      0 0.35rem 1.25rem rgba(0, 0, 0, 0.08),
+      inset 0 1px 0 rgba(255, 255, 255, 0.65);
+  }
+}
+
+.moon-intro-stat {
+  position: relative;
+  border: 1px solid rgba(201, 169, 110, 0.42);
+  box-shadow:
+    0 0 0 1px rgba(201, 169, 110, 0.14),
+    0 12px 42px rgba(201, 169, 110, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.42);
+}
+
+@media (min-width: 1280px) {
+  .moon-intro-stats .moon-intro-stat:not(:last-child)::after {
+    content: "\2192";
+    position: absolute;
+    top: 50%;
+    right: -1.95rem;
+    z-index: 2;
+    transform: translateY(-50%);
+    pointer-events: none;
+    font-family: var(--font-display), ui-serif, Georgia, serif;
+    font-size: 1.45rem;
+    font-weight: 600;
+    line-height: 1;
+    color: #c9a96e;
+    text-shadow:
+      0 0 14px rgba(201, 169, 110, 0.95),
+      0 0 28px rgba(255, 224, 180, 0.55),
+      0 0 42px rgba(201, 169, 110, 0.35);
+    opacity: 0.95;
+  }
+}
+
+@media (max-width: 1279px) {
+  .moon-intro-stats .moon-intro-stat::after {
+    content: none;
+    display: none;
+  }
+}
+
+section.interaction-demo-section .interaction-demo-visual-rail {
+  padding-right: 0;
+  margin-right: 0;
+}
+
+@media (min-width: 1024px) {
+  section.interaction-demo-section .interaction-demo-visual-rail .interaction-demo-mirror-stage {
+    width: calc((400% / 3) + 4px);
+    left: calc((-100% / 3) - 2px);
+  }
+}

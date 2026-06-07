@@ -1,13 +1,20 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>mirrai</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Mirrai — Next.js app</title>
+    <!-- Polish-only CSS mirror (see app/globals.css for the full stylesheet). -->
+    <link rel="stylesheet" href="./styles.css" />
   </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+  <body style="font-family: system-ui; padding: 2rem; max-width: 40rem">
+    <p>
+      This repository ships as a <strong>Next.js</strong> app. Run <code>npm run dev</code> and open
+      <a href="http://localhost:3000">http://localhost:3000</a>.
+    </p>
+    <p>
+      Section polish lives in <code>app/globals.css</code>. This file + <code>styles.css</code> are
+      optional references for static workflows (same rules duplicated in <code>styles.css</code>).
+    </p>
   </body>
 </html>
