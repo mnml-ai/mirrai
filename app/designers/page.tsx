@@ -228,12 +228,12 @@ export function DesignersPageContent({ locale = DEFAULT_LOCALE }: { locale?: Loc
           </p>
         </div>
         <div className="designers-trade-action">
-          <Link className="designers-button designers-button--filled" href="mailto:bd@mirrai.com?subject=MIRRAI%20Trade%20Access">
+          <Link className="designers-button designers-button--filled" href="mailto:bd@odxstudio.com?subject=MIRRAI%20Trade%20Access">
             {designersCopy.trade.cta}
             <span aria-hidden>{dictionary.common.arrow}</span>
           </Link>
           <p>
-            {designersCopy.trade.emailLead} <a href="mailto:bd@mirrai.com">bd@Mirrai.com</a>
+            {designersCopy.trade.emailLead} <a href="mailto:bd@odxstudio.com">bd@odxstudio.com</a>
           </p>
         </div>
         <div className="designers-trade-media" aria-hidden>

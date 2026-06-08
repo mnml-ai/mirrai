@@ -92,7 +92,7 @@ Please help me with options and pricing.`,
         links: [
           { label: "Interior Designers & Architect", href: "/designers" },
           { label: "Developers & Projects", href: "/#designers" },
-          { label: "Custom", href: "/custom" },
+          { label: "Customized Orders", href: "/custom" },
         ],
       },
       {
@@ -151,6 +151,32 @@ Please help me with options and pricing.`,
         body: "Need a faster reply or have inquiries? Chat with us anytime. We're here for you.",
       },
     },
+    companyInfo: {
+      intro: "MIRRAI is a brand by ODX Studio.",
+      companyLabel: "Company:",
+      companyValue: "ODX Studio",
+      vatLabel: "VAT number:",
+      vatValue: "769-598-773",
+      tradeNumberLabel: "Trade Number:",
+      tradeNumberValue: "272018",
+      registeredAddressLabel: "Registered Address:",
+      registeredAddressValue: "Plus mall, Southern investors, New Cairo, Cairo",
+      phoneLabel: "Phone Number:",
+      phoneValue: "01228674700",
+      emailLabel: "Email:",
+      emailValue: "info@odxstudio.com",
+    },
+  },
+  homepageFaqSeparator: {
+    kicker: "Still wondering?",
+    title: "Answers to what\nmatters most.",
+  },
+  homepageFaq: {
+    kicker: "FAQ",
+    title: "Frequently asked.",
+    subtitle:
+      "Hidden TV mirrors, customization,\ninstallation, compatibility, warranty,\nand production timelines.",
+    action: "View All FAQs",
   },
   faqPage: {
     label: "FAQ",
@@ -168,9 +194,43 @@ Please help me with options and pricing.`,
           "A MIRRAI mirror TV is a smart mirror with a seamlessly integrated display hidden behind the glass. When turned off, it is used as a mirror. When TV is on, the display becomes visible.",
       },
       {
+        question: "Can the mirror be customized?",
+        answer:
+          "Yes. Selected collections offer customizable dimensions, frame finishes, lighting configurations, and TV integration options.",
+      },
+      {
+        question: "How is the mirror installed?",
+        answer:
+          "MIRRAI mirrors are installed using a French cleat mounting system designed for strength, alignment, and clean wall integration.",
+      },
+      {
+        question: "Which TV sizes are available?",
+        answer:
+          "Available TV sizes depend on the selected mirror dimensions. Larger displays are only available for compatible mirror sizes.",
+      },
+      {
+        question: "Do you offer international shipping?",
+        answer:
+          "Yes. MIRRAI ships internationally. Shipping fees and delivery timelines are calculated during checkout for Egypt orders only. For international orders, please contact us for a shipping quotation.",
+      },
+      {
+        question: "What warranty is included?",
+        answer:
+          "MIRRAI products include a 2-year warranty covering manufacturing defects under normal residential use. TV warranty coverage remains under the original TV manufacturer's warranty policy.",
+      },
+      {
+        question: "Can MIRRAI mirrors be used in bathrooms?",
+        answer: "Yes. MIRRAI mirrors are waterproof and suitable for bathrooms.",
+      },
+      {
         question: "Is the TV visible when turned off?",
         answer:
           "No. The display remains hidden behind the mirror surface when powered off, maintaining a clean mirror.",
+      },
+      {
+        question: "What is the production lead time?",
+        answer:
+          "Most MIRRAI products are built to order. Estimated production and delivery timelines are typically around 10 days. Custom orders, complex dimensions, special finishes, or project quantities may require additional production time. If you require a faster or delayed delivery schedule, please contact us before placing your order.",
       },
       {
         question: "Can I use my own TV?",
@@ -183,16 +243,6 @@ Please help me with options and pricing.`,
           "Yes. MIRRAI can purchase and install the TV for you at an additional cost based on your selected configuration. After your order is confirmed, a MIRRAI representative will contact you with available TV models and pricing options.",
       },
       {
-        question: "Which TV sizes are available?",
-        answer:
-          "Available TV sizes depend on the selected mirror dimensions. Larger displays are only available for compatible mirror sizes.",
-      },
-      {
-        question: "Can the mirror be customized?",
-        answer:
-          "Yes. Selected collections offer customizable dimensions, frame finishes, lighting configurations, and TV integration options.",
-      },
-      {
         question: "What lighting options are available?",
         answer:
           "Depending on the collection, MIRRAI mirrors support backlight hidden LED, front frame lighting, and adjustable warm and white LED configurations. Lighting availability varies by model.",
@@ -200,16 +250,6 @@ Please help me with options and pricing.`,
       {
         question: "Does the mirror work without lighting?",
         answer: "Yes. Lighting is optional on selected models and can be configured based on your preference.",
-      },
-      {
-        question: "How is the mirror installed?",
-        answer:
-          "MIRRAI mirrors are installed using a French cleat mounting system designed for strength, alignment, and clean wall integration.",
-      },
-      {
-        question: "Do you offer international shipping?",
-        answer:
-          "Yes. MIRRAI ships internationally. Shipping fees and delivery timelines are calculated during checkout for Egypt orders only. For international orders, please contact us for a shipping quotation.",
       },
       {
         question: "Is installation included?",
@@ -225,20 +265,6 @@ Please help me with options and pricing.`,
         question: "Are installment payments available?",
         answer:
           "Yes. Installment payment options may be available depending on your payment provider, bank, and region during checkout.",
-      },
-      {
-        question: "What is the production lead time?",
-        answer:
-          "Most MIRRAI products are built to order. Estimated production and delivery timelines are typically between 2-3 weeks. If you require a faster or delayed delivery schedule, please contact us before placing your order.",
-      },
-      {
-        question: "Can MIRRAI mirrors be used in bathrooms?",
-        answer: "Yes. MIRRAI mirrors are waterproof and suitable for bathrooms.",
-      },
-      {
-        question: "What warranty is included?",
-        answer:
-          "MIRRAI products include a 2-year warranty covering manufacturing defects under normal residential use. TV warranty coverage remains under the original TV manufacturer's warranty policy.",
       },
       {
         question: "How do I clean the mirror?",
@@ -257,7 +283,7 @@ Please help me with options and pricing.`,
     title: "Smart Mirror Collection",
     subtitle: "Discover the perfect MIRRAI for your space.",
     actions: {
-      explore: "Explore",
+      explore: "Buy Now",
     },
     badges: {
       bestSeller: "Best Seller",
@@ -272,7 +298,7 @@ Please help me with options and pricing.`,
       frame: {
         name: "MIRRAI Frame",
         description: "Side-frame smart mirror.",
-        price: "From EGP 18,000",
+        price: "From EGP 19,500",
       },
       halo: {
         name: "MIRRAI Halo",
@@ -282,12 +308,12 @@ Please help me with options and pricing.`,
       lounge: {
         name: "MIRRAI Lounge",
         description: "Large luxury mirror TV.",
-        price: "From EGP 28,000",
+        price: "From EGP 16,500",
       },
       grande: {
         name: "MIRRAI Grande",
         description: "Extra-large mirror TV for statement walls.",
-        price: "From EGP 45,000",
+        price: "From EGP 39,000",
       },
       classic: {
         name: "MIRRAI Classic",

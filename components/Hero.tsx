@@ -717,7 +717,7 @@ export default function Hero({ locale = DEFAULT_LOCALE }: { locale?: Locale }) {
       </svg>
 
       <div
-        className="relative z-20 flex flex-col justify-center gap-5"
+        className="hero-copy relative z-20 flex flex-col justify-center gap-5"
         style={{
           position: "absolute",
           top: "26.4%",

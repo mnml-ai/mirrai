@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { ODX_LEGAL_LINE } from "@/components/LegalCompanyInfo";
 import {
   DEFAULT_LOCALE,
   LOCALE_LABELS,
@@ -141,10 +142,32 @@ export default function HomepageFinale({
 
       <footer className="homepage-footer" id="contact">
         <div className="homepage-footer-brand">
-          <p className="homepage-footer-mark" aria-hidden>
-            M
-          </p>
-          <h3>{dictionary.common.mirrai}</h3>
+          <a
+            className="homepage-footer-logo"
+            href={getLocalizedHref("/#home", locale)}
+            aria-label={dictionary.nav.logoLabel}
+          >
+            <span className="homepage-footer-logo-part homepage-footer-logo-part--icon" aria-hidden="true">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/images/brand/mirrai-logo-no-slogan-transparent.png"
+                width="1170"
+                height="500"
+                alt=""
+                draggable={false}
+              />
+            </span>
+            <span className="homepage-footer-logo-part homepage-footer-logo-part--title" aria-hidden="true">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/images/brand/mirrai-logo-no-slogan-transparent.png"
+                width="1170"
+                height="500"
+                alt=""
+                draggable={false}
+              />
+            </span>
+          </a>
           <p className="homepage-footer-brand-copy">
             {dictionary.footer.brandCopy}
           </p>
@@ -153,9 +176,9 @@ export default function HomepageFinale({
               <FinaleIcon type="whatsapp" />
               <span>{dictionary.common.whatsapp}</span>
             </a>
-            <a href="mailto:hello@mirrai.com">
+            <a href="mailto:mirrai@odxstudio.com">
               <FinaleIcon type="mail" />
-              <span>hello@mirrai.com</span>
+              <span>mirrai@odxstudio.com</span>
             </a>
             <span>
               <FinaleIcon type="pin" />
@@ -185,7 +208,10 @@ export default function HomepageFinale({
         </nav>
 
         <div className="homepage-footer-bottom">
-          <p>{dictionary.footer.copyright}</p>
+          <div className="homepage-footer-legal">
+            <p>{dictionary.footer.copyright}</p>
+            <p>{ODX_LEGAL_LINE}</p>
+          </div>
           <div className="homepage-footer-language" aria-label={dictionary.common.language}>
             {LOCALES.map((language, index) => (
               <span key={language}>

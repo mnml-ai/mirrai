@@ -1,10 +1,10 @@
 import { isProductSlug, type ProductSlug } from "@/lib/products";
 
-export const MIRRAI_PRODUCT_BASE_PRICE: Record<ProductSlug, [number, number, number]> = {
-  halo: [28500, 38500, 54500],
-  frame: [31500, 42500, 59500],
-  lounge: [42500, 56500, 76500],
-  grande: [52500, 72500, 98500],
+export const MIRRAI_PRODUCT_BASE_PRICE: Record<ProductSlug, readonly number[]> = {
+  halo: [16000, 20000, 26000, 31000, 42000],
+  frame: [19500, 25000],
+  lounge: [16500, 21800, 32500, 43000],
+  grande: [39000, 44000, 49000, 52000, 65000, 92000, 100000],
   classic: [35500, 48500, 68500],
 };
 
@@ -14,7 +14,38 @@ export const MIRRAI_MIRROR_SIZES = [
   { label: "180 cm", maxTv: 85 },
 ] as const;
 
-export const MIRRAI_TV_SIZES = [32, 43, 55, 65, 75, 85] as const;
+export const MIRRAI_TV_SIZES = [32, 43, 50, 55, 65, 75, 85] as const;
+
+const MIRRAI_PRODUCT_MIRROR_SIZES: Partial<
+  Record<ProductSlug, readonly { label: string; maxTv: number; tvSizes?: readonly TvSize[] }[]>
+> = {
+  halo: [
+    { label: "91 cm", maxTv: 32, tvSizes: [32] },
+    { label: "119 cm", maxTv: 43, tvSizes: [32, 43] },
+    { label: "134 cm", maxTv: 50, tvSizes: [32, 43, 50] },
+    { label: "147 cm", maxTv: 55, tvSizes: [32, 43, 50, 55] },
+    { label: "172 cm", maxTv: 65, tvSizes: [32, 43, 50, 55, 65] },
+  ],
+  frame: [
+    { label: "105 x 145 cm", maxTv: 43, tvSizes: [32, 43] },
+    { label: "120 x 160 cm", maxTv: 50, tvSizes: [32, 43, 50] },
+  ],
+  lounge: [
+    { label: "115 x 80 cm", maxTv: 50, tvSizes: [32, 43, 50] },
+    { label: "135 x 90 cm", maxTv: 55, tvSizes: [32, 43, 50, 55] },
+    { label: "175 x 110 cm", maxTv: 75, tvSizes: [32, 43, 65, 75] },
+    { label: "200 x 120 cm", maxTv: 85, tvSizes: [32, 43, 50, 55, 65, 75, 85] },
+  ],
+  grande: [
+    { label: "110 x 260 cm", maxTv: 43, tvSizes: [32, 43] },
+    { label: "125 x 260 cm", maxTv: 50, tvSizes: [32, 43, 50] },
+    { label: "150 x 260 cm", maxTv: 65, tvSizes: [32, 43, 50, 55, 65] },
+    { label: "180 x 260 cm", maxTv: 75, tvSizes: [32, 43, 50, 55, 65, 75] },
+    { label: "200 x 260 cm", maxTv: 85, tvSizes: [32, 43, 50, 55, 65, 75, 85] },
+    { label: "230 x 260 cm", maxTv: 85, tvSizes: [32, 43, 50, 55, 65, 75, 85] },
+    { label: "260 x 260 cm", maxTv: 85, tvSizes: [32, 43, 50, 55, 65, 75, 85] },
+  ],
+};
 
 export const MIRRAI_FRAME_COLORS = [
   { key: "white", label: "White", hex: "#f8f7f3", price: 0 },
@@ -28,6 +59,8 @@ export const MIRRAI_LIGHT_PRICE = {
   backlight: 4500,
   frontlight: 3500,
 } as const;
+
+const MIRRAI_HALO_OAK_FRAME_PRICE = [17000, 22000, 28000, 34000, 45000] as const;
 
 export const MIRRAI_TV_AVAILABILITY_LABELS = {
   pickup: "Yes, I already have a TV",
@@ -45,7 +78,7 @@ export const MIRRAI_LIGHT_COLOR_LABELS = {
   warmWhite: "Warm White",
 } as const;
 
-export type MirrorSizeIndex = 0 | 1 | 2;
+export type MirrorSizeIndex = number;
 export type FrameColorKey = (typeof MIRRAI_FRAME_COLORS)[number]["key"];
 export type TvSize = (typeof MIRRAI_TV_SIZES)[number];
 export type TvAvailabilityKey = keyof typeof MIRRAI_TV_AVAILABILITY_LABELS;
@@ -81,8 +114,59 @@ const PRODUCT_TITLES: Record<ProductSlug, string> = {
   classic: "MIRRAI Classic",
 };
 
-function isMirrorSizeIndex(value: unknown): value is MirrorSizeIndex {
-  return value === 0 || value === 1 || value === 2;
+const MIRRAI_PRODUCT_LIGHT_PRICE: Partial<Record<ProductSlug, Partial<Record<LightKey, readonly number[]>>>> = {
+  halo: {
+    backlight: [1200, 1400, 1600, 1800, 2000],
+  },
+  frame: {
+    backlight: [1400, 2000],
+    frontlight: [1400, 2000],
+  },
+  lounge: {
+    backlight: [1200, 1500, 1800, 2000],
+  },
+  grande: {
+    backlight: [2000, 2000, 2000, 2000, 2000, 2000, 2000],
+  },
+};
+
+export function getMirraiMirrorSizes(slug: ProductSlug) {
+  return MIRRAI_PRODUCT_MIRROR_SIZES[slug] ?? MIRRAI_MIRROR_SIZES;
+}
+
+export function getMirraiTvSizes(slug: ProductSlug) {
+  const exactTvSizes = new Set(
+    MIRRAI_PRODUCT_MIRROR_SIZES[slug]?.flatMap((size) => size.tvSizes ?? []) ?? []
+  );
+
+  if (exactTvSizes.size > 0) {
+    return MIRRAI_TV_SIZES.filter((size) => exactTvSizes.has(size));
+  }
+
+  return MIRRAI_TV_SIZES.filter((size) => size !== 50);
+}
+
+export function getMirraiCompatibleTvSizes(slug: ProductSlug, sizeIndex: MirrorSizeIndex) {
+  const selectedSize = getMirraiMirrorSizes(slug)[sizeIndex];
+
+  if (!selectedSize) {
+    return [];
+  }
+
+  if ("tvSizes" in selectedSize && selectedSize.tvSizes) {
+    return selectedSize.tvSizes;
+  }
+
+  return getMirraiTvSizes(slug).filter((size) => size <= selectedSize.maxTv);
+}
+
+function isMirrorSizeIndex(slug: ProductSlug, value: unknown): value is MirrorSizeIndex {
+  return (
+    typeof value === "number"
+    && Number.isInteger(value)
+    && value >= 0
+    && value < getMirraiMirrorSizes(slug).length
+  );
 }
 
 function isFrameColor(value: unknown): value is FrameColorKey {
@@ -125,7 +209,7 @@ export function parseMirraiConfiguration(input: unknown): MirraiProductConfigura
     throw new Error("Invalid product model.");
   }
 
-  if (!isMirrorSizeIndex(sizeIndex)) {
+  if (!isMirrorSizeIndex(slug, sizeIndex)) {
     throw new Error("Invalid mirror size.");
   }
 
@@ -172,9 +256,7 @@ export function parseMirraiConfiguration(input: unknown): MirraiProductConfigura
     throw new Error("Light color is only available when lighting is selected.");
   }
 
-  const selectedSize = MIRRAI_MIRROR_SIZES[sizeIndex];
-
-  if (tvSize > selectedSize.maxTv) {
+  if (!getMirraiCompatibleTvSizes(slug, sizeIndex).includes(tvSize)) {
     throw new Error("Selected TV size is not available for this mirror size.");
   }
 
@@ -191,20 +273,25 @@ export function parseMirraiConfiguration(input: unknown): MirraiProductConfigura
 }
 
 export function calculateMirraiPrice(configuration: MirraiProductConfiguration): MirraiPricedConfiguration {
-  const selectedSize = MIRRAI_MIRROR_SIZES[configuration.sizeIndex];
+  const selectedSize = getMirraiMirrorSizes(configuration.slug)[configuration.sizeIndex];
   const selectedFrameColor = MIRRAI_FRAME_COLORS.find((color) => color.key === configuration.frameColor);
 
   if (!selectedFrameColor) {
     throw new Error("Invalid frame color.");
   }
 
+  if (!selectedSize) {
+    throw new Error("Invalid mirror size.");
+  }
+
   const lightTotal = configuration.lights.reduce(
-    (sum, light) => sum + MIRRAI_LIGHT_PRICE[light],
+    (sum, light) => sum + getMirraiLightPrice(configuration.slug, configuration.sizeIndex, light),
     0
   );
+  const basePrice = getMirraiBasePrice(configuration.slug, configuration.sizeIndex);
   const price =
-    MIRRAI_PRODUCT_BASE_PRICE[configuration.slug][configuration.sizeIndex]
-    + selectedFrameColor.price
+    basePrice
+    + getMirraiFrameColorPrice(configuration.slug, configuration.sizeIndex, selectedFrameColor)
     + lightTotal;
   const lightingLabel =
     configuration.lights.length > 0
@@ -224,6 +311,61 @@ export function calculateMirraiPrice(configuration: MirraiProductConfiguration):
     lightColorLabel,
     price,
   };
+}
+
+function getMirraiBasePrice(slug: ProductSlug, sizeIndex: MirrorSizeIndex) {
+  const basePrice = MIRRAI_PRODUCT_BASE_PRICE[slug][sizeIndex];
+
+  if (typeof basePrice !== "number") {
+    throw new Error("Invalid product price.");
+  }
+
+  return basePrice;
+}
+
+function getMirraiFrameColorPrice(
+  slug: ProductSlug,
+  sizeIndex: MirrorSizeIndex,
+  frameColor: (typeof MIRRAI_FRAME_COLORS)[number]
+) {
+  if (slug !== "halo") {
+    if (slug === "frame" || slug === "lounge" || slug === "grande") {
+      return 0;
+    }
+
+    return frameColor.price;
+  }
+
+  if (frameColor.key !== "lightOak" && frameColor.key !== "darkOak") {
+    return 0;
+  }
+
+  const oakPrice = MIRRAI_HALO_OAK_FRAME_PRICE[sizeIndex];
+  const basePrice = getMirraiBasePrice(slug, sizeIndex);
+
+  if (typeof oakPrice !== "number") {
+    throw new Error("Invalid Halo frame price.");
+  }
+
+  return oakPrice - basePrice;
+}
+
+function getMirraiLightPrice(slug: ProductSlug, sizeIndex: MirrorSizeIndex, light: LightKey) {
+  const productLightPrice = MIRRAI_PRODUCT_LIGHT_PRICE[slug]?.[light]?.[sizeIndex];
+
+  if (typeof productLightPrice === "number") {
+    return productLightPrice;
+  }
+
+  if (slug in MIRRAI_PRODUCT_LIGHT_PRICE) {
+    if (light === "frontlight" && slug !== "frame") {
+      throw new Error("Frontlight is only available for MIRRAI Frame.");
+    }
+
+    throw new Error("Invalid product lighting price.");
+  }
+
+  return MIRRAI_LIGHT_PRICE[light];
 }
 
 export function priceMirraiConfiguration(input: unknown) {

@@ -1,6 +1,14 @@
 "use client";
 
-import { type ChangeEvent, type DragEvent, type FormEvent, useRef, useState } from "react";
+import {
+  type ChangeEvent,
+  type DragEvent,
+  type FormEvent,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { DEFAULT_LOCALE, getDictionary, type Locale } from "@/lib/i18n";
 
 const PROCESS_STEP_NUMBERS = ["01", "02", "03"] as const;
@@ -259,6 +267,14 @@ const FORM_COUNTRIES = [...FAVORITE_COUNTRY_CODES, ...COUNTRY_CODES];
 const MAX_UPLOAD_SIZE = 10 * 1024 * 1024;
 const ALLOWED_UPLOAD_EXTENSIONS = [".jpg", ".jpeg", ".png", ".pdf", ".dwg", ".skp"];
 
+function isImageUpload(file: File) {
+  return file.type.startsWith("image/") || /\.(jpe?g|png)$/i.test(file.name);
+}
+
+function getFileExtension(file: File) {
+  return file.name.split(".").pop()?.toUpperCase() ?? "FILE";
+}
+
 export default function CustomBriefForm({ locale = DEFAULT_LOCALE }: { locale?: Locale }) {
   const dictionary = getDictionary(locale);
   const formCopy = dictionary.customPage.form;
@@ -287,9 +303,28 @@ export default function CustomBriefForm({ locale = DEFAULT_LOCALE }: { locale?: 
     }
 
     if (validFiles.length > 0) {
-      setSelectedFiles((current) => [...current, ...validFiles]);
+      setSelectedFiles((current) => [...current, ...validFiles].slice(0, ATTACHMENT_CARD_COUNT));
     }
   };
+
+  const filePreviews = useMemo(
+    () =>
+      selectedFiles.map((file) =>
+        isImageUpload(file) ? URL.createObjectURL(file) : null
+      ),
+    [selectedFiles]
+  );
+
+  useEffect(
+    () => () => {
+      filePreviews.forEach((preview) => {
+        if (preview) {
+          URL.revokeObjectURL(preview);
+        }
+      });
+    },
+    [filePreviews]
+  );
 
   const handleFileInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
@@ -618,43 +653,55 @@ export default function CustomBriefForm({ locale = DEFAULT_LOCALE }: { locale?: 
               </div>
             </div>
             {uploadError ? <p className="brief-upload-error">{uploadError}</p> : null}
-            {selectedFiles.length > 0 ? (
-              <ul className="brief-upload-files" aria-label={formCopy.selectedFilesAria}>
-                {selectedFiles.map((file, index) => (
-                  <li key={`${file.name}-${file.size}-${index}`}>
-                    <span className="brief-upload-file-name">{file.name}</span>
-                    <small className="brief-upload-file-meta">{(file.size / (1024 * 1024)).toFixed(1)}MB</small>
-                    <button
-                      type="button"
-                      className="brief-upload-remove"
-                      aria-label={`${formCopy.removeFileAria} ${file.name}`}
-                      onClick={() => removeSelectedFile(index)}
-                    >
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-                        <line x1="18" y1="6" x2="6" y2="18"/>
-                        <line x1="6" y1="6" x2="18" y2="18"/>
-                      </svg>
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            ) : null}
 
-            <div className="brief-thumbs">
-              {Array.from({ length: ATTACHMENT_CARD_COUNT }, (_, index) => (
-                <button
-                  type="button"
-                  key={`attachment-card-${index}`}
-                  className="brief-thumb brief-thumb--add"
-                  aria-label={`${formCopy.addMoreAria} ${index + 1}`}
-                  onClick={() => fileInputRef.current?.click()}
-                >
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#8d6840" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-                    <line x1="12" y1="5" x2="12" y2="19"/>
-                    <line x1="5" y1="12" x2="19" y2="12"/>
-                  </svg>
-                </button>
-              ))}
+            <div className="brief-thumbs" aria-label={formCopy.selectedFilesAria}>
+              {Array.from({ length: ATTACHMENT_CARD_COUNT }, (_, index) => {
+                const file = selectedFiles[index];
+
+                if (file) {
+                  const preview = filePreviews[index];
+
+                  return (
+                    <div key={`attachment-card-${file.name}-${file.size}-${index}`} className="brief-thumb brief-thumb--filled">
+                      {preview ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={preview} alt={file.name} className="brief-thumb-image" />
+                      ) : (
+                        <div className="brief-thumb-file">
+                          <span className="brief-thumb-ext">{getFileExtension(file)}</span>
+                          <span className="brief-thumb-name">{file.name}</span>
+                        </div>
+                      )}
+                      <button
+                        type="button"
+                        className="brief-thumb-remove"
+                        aria-label={`${formCopy.removeFileAria} ${file.name}`}
+                        onClick={() => removeSelectedFile(index)}
+                      >
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                          <line x1="18" y1="6" x2="6" y2="18"/>
+                          <line x1="6" y1="6" x2="18" y2="18"/>
+                        </svg>
+                      </button>
+                    </div>
+                  );
+                }
+
+                return (
+                  <button
+                    type="button"
+                    key={`attachment-card-empty-${index}`}
+                    className="brief-thumb brief-thumb--add"
+                    aria-label={`${formCopy.addMoreAria} ${index + 1}`}
+                    onClick={() => fileInputRef.current?.click()}
+                  >
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#8d6840" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                      <line x1="12" y1="5" x2="12" y2="19"/>
+                      <line x1="5" y1="12" x2="19" y2="12"/>
+                    </svg>
+                  </button>
+                );
+              })}
             </div>
           </div>
 
@@ -688,12 +735,12 @@ export default function CustomBriefForm({ locale = DEFAULT_LOCALE }: { locale?: 
           z-index: 3;
           background: transparent;
           margin-top: 0;
-          padding: 0 clamp(16px, 4.4vw, 58px) clamp(72px, 8vw, 118px);
+          padding: 0 clamp(16px, 4.4vw, 58px) clamp(24px, 3vw, 40px);
         }
 
         .brief-card {
           max-width: 1188px;
-          margin: 0 auto;
+          margin: 0 auto -169px;
           background: rgba(255, 252, 247, 0.96);
           border: 1px solid rgba(150, 112, 74, 0.18);
           border-radius: 22px;
@@ -1107,61 +1154,6 @@ export default function CustomBriefForm({ locale = DEFAULT_LOCALE }: { locale?: 
           font-size: 0.76rem;
         }
 
-        .brief-upload-files {
-          display: grid;
-          gap: 0.4rem;
-          margin: 0;
-          padding: 0;
-          list-style: none;
-        }
-
-        .brief-upload-files li {
-          display: grid;
-          grid-template-columns: minmax(0, 1fr) auto 32px;
-          align-items: center;
-          gap: 0.65rem;
-          min-height: 46px;
-          padding: 0.45rem 0.48rem 0.45rem 0.75rem;
-          border: 1px solid rgba(141, 104, 64, 0.16);
-          border-radius: 7px;
-          background: rgba(255, 255, 255, 0.52);
-          color: #2b211c;
-          font-family: var(--font-body), system-ui, sans-serif;
-          font-size: 0.78rem;
-        }
-
-        .brief-upload-file-name {
-          min-width: 0;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          unicode-bidi: plaintext;
-        }
-
-        .brief-upload-file-meta {
-          color: rgba(37, 35, 32, 0.5);
-          white-space: nowrap;
-        }
-
-        .brief-upload-remove {
-          width: 32px;
-          height: 32px;
-          border: 1px solid rgba(141, 104, 64, 0.16);
-          border-radius: 999px;
-          background: rgba(255, 255, 255, 0.6);
-          color: #8d6840;
-          display: inline-grid;
-          place-items: center;
-          cursor: pointer;
-          transition: background 180ms ease, border-color 180ms ease, color 180ms ease;
-        }
-
-        .brief-upload-remove:hover {
-          border-color: rgba(157, 63, 47, 0.35);
-          background: rgba(157, 63, 47, 0.08);
-          color: #9d3f2f;
-        }
-
         .brief-thumbs {
           display: grid;
           grid-template-columns: repeat(6, minmax(0, 1fr));
@@ -1191,6 +1183,71 @@ export default function CustomBriefForm({ locale = DEFAULT_LOCALE }: { locale?: 
           display: inline-flex;
           align-items: center;
           justify-content: center;
+        }
+
+        .brief-thumb--filled {
+          display: block;
+          cursor: default;
+        }
+
+        .brief-thumb-image {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
+        }
+
+        .brief-thumb-file {
+          width: 100%;
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 0.35rem;
+          padding: 0.45rem;
+          text-align: center;
+        }
+
+        .brief-thumb-ext {
+          font-family: var(--font-body), system-ui, sans-serif;
+          font-size: 0.72rem;
+          font-weight: 800;
+          letter-spacing: 0.08em;
+          color: #8d6840;
+        }
+
+        .brief-thumb-name {
+          max-width: 100%;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          font-family: var(--font-body), system-ui, sans-serif;
+          font-size: 0.62rem;
+          color: rgba(37, 35, 32, 0.62);
+          unicode-bidi: plaintext;
+        }
+
+        .brief-thumb-remove {
+          position: absolute;
+          top: 0.35rem;
+          inset-inline-end: 0.35rem;
+          width: 24px;
+          height: 24px;
+          border: 1px solid rgba(141, 104, 64, 0.16);
+          border-radius: 999px;
+          background: rgba(255, 255, 255, 0.92);
+          color: #8d6840;
+          display: inline-grid;
+          place-items: center;
+          cursor: pointer;
+          transition: background 180ms ease, border-color 180ms ease, color 180ms ease;
+        }
+
+        .brief-thumb-remove:hover {
+          border-color: rgba(157, 63, 47, 0.35);
+          background: rgba(157, 63, 47, 0.08);
+          color: #9d3f2f;
         }
 
         /* Submit */
@@ -1328,17 +1385,6 @@ export default function CustomBriefForm({ locale = DEFAULT_LOCALE }: { locale?: 
           .brief-upload-text span,
           .brief-upload-text small {
             white-space: normal;
-          }
-
-          .brief-upload-files li {
-            grid-template-columns: minmax(0, 1fr) auto 30px;
-            gap: 0.45rem;
-            padding-inline: 0.65rem 0.42rem;
-          }
-
-          .brief-upload-remove {
-            width: 30px;
-            height: 30px;
           }
 
           .brief-thumbs {

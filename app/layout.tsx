@@ -5,7 +5,7 @@ import {
   Inter,
   Inter_Tight,
   Cormorant_Garamond,
-  Noto_Sans_Arabic,
+  Noto_Kufi_Arabic,
 } from "next/font/google";
 import LocaleDocumentAttributes from "@/components/i18n/LocaleDocumentAttributes";
 import { getSiteUrl } from "@/lib/site-url";
@@ -41,10 +41,10 @@ const cormorant = Cormorant_Garamond({
   weight: ["400", "500", "600"],
 });
 
-const notoSansArabic = Noto_Sans_Arabic({
+const notoKufiArabic = Noto_Kufi_Arabic({
   variable: "--font-arabic",
   subsets: ["arabic"],
-  weight: ["400", "500", "600", "700", "800"],
+  weight: ["400", "500", "800"],
 });
 
 export const metadata: Metadata = {
@@ -71,7 +71,7 @@ export default function RootLayout({
       lang="en"
       dir="ltr"
       suppressHydrationWarning
-      className={`${spaceGrotesk.variable} ${barlowCondensed.variable} ${inter.variable} ${interTight.variable} ${cormorant.variable} ${notoSansArabic.variable}`}
+      className={`${spaceGrotesk.variable} ${barlowCondensed.variable} ${inter.variable} ${interTight.variable} ${cormorant.variable} ${notoKufiArabic.variable}`}
     >
       <body>
         <LocaleDocumentAttributes />
