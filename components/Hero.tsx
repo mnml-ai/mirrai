@@ -209,10 +209,11 @@ function HeroMobile({
       }, MOBILE_HERO_AUTO_START_MS);
     };
 
-    prepareAndStart();
+    const startTimer = window.setTimeout(prepareAndStart, 150);
     mobileQuery.addEventListener("change", prepareAndStart);
 
     return () => {
+      window.clearTimeout(startTimer);
       mobileQuery.removeEventListener("change", prepareAndStart);
       timelineRef.current?.kill();
       clearMobileCycle();

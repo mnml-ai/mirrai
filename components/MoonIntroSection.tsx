@@ -127,14 +127,23 @@ export default function MoonIntroSection({
         void mobileVideo.play().catch(() => undefined);
       }
 
-      const refreshScrollTriggers = () => ScrollTrigger.refresh();
+      const refreshScrollTriggers = () => {
+        requestAnimationFrame(() => ScrollTrigger.refresh());
+      };
       const refreshFrame = window.requestAnimationFrame(refreshScrollTriggers);
+      const refreshTimers = [
+        window.setTimeout(refreshScrollTriggers, 200),
+        window.setTimeout(refreshScrollTriggers, 800),
+      ];
       window.addEventListener("load", refreshScrollTriggers);
+      window.addEventListener("orientationchange", refreshScrollTriggers);
       window.visualViewport?.addEventListener("resize", refreshScrollTriggers);
 
       return () => {
         window.cancelAnimationFrame(refreshFrame);
+        refreshTimers.forEach((timer) => window.clearTimeout(timer));
         window.removeEventListener("load", refreshScrollTriggers);
+        window.removeEventListener("orientationchange", refreshScrollTriggers);
         window.visualViewport?.removeEventListener("resize", refreshScrollTriggers);
       };
     },
