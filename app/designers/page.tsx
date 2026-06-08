@@ -3,6 +3,14 @@ import Link from "next/link";
 import HomepageFinale from "@/components/HomepageFinale";
 import SiteNavbar from "@/components/SiteNavbar";
 import { DEFAULT_LOCALE, getDictionary, type Locale } from "@/lib/i18n";
+import { createPageMetadata } from "@/lib/seo";
+
+export const metadata = createPageMetadata({
+  title: "For Designers & Architects | MIRRAI",
+  description: "Trade and project support for interior designers, architects, and developers.",
+  path: "/designers",
+  image: "/images/designers/hero-desktop.jpg",
+});
 
 const whyItems = [
   {

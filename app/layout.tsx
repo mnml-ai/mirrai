@@ -8,6 +8,7 @@ import {
   Noto_Sans_Arabic,
 } from "next/font/google";
 import LocaleDocumentAttributes from "@/components/i18n/LocaleDocumentAttributes";
+import { getSiteUrl } from "@/lib/site-url";
 import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({
@@ -47,8 +48,17 @@ const notoSansArabic = Noto_Sans_Arabic({
 });
 
 export const metadata: Metadata = {
-  title: "Mirrai — More Than a Mirror",
+  metadataBase: new URL(getSiteUrl()),
+  applicationName: "MIRRAI",
+  title: {
+    default: "Mirrai — More Than a Mirror",
+    template: "%s",
+  },
   description: "Entertainment, Hidden in Reflection.",
+  openGraph: {
+    siteName: "MIRRAI",
+    type: "website",
+  },
 };
 
 export default function RootLayout({

@@ -2,6 +2,14 @@ import SiteNavbar from "@/components/SiteNavbar";
 import HomepageFinale from "@/components/HomepageFinale";
 import FaqAccordion from "@/components/FaqAccordion";
 import { DEFAULT_LOCALE, getDictionary, getLocalizedHref, type Locale } from "@/lib/i18n";
+import { createPageMetadata } from "@/lib/seo";
+
+export const metadata = createPageMetadata({
+  title: "FAQ | MIRRAI",
+  description: "Everything you need to know before bringing MIRRAI into your space.",
+  path: "/faq",
+  image: "/images/faq/FAQ-hero-desktop.png",
+});
 
 type FaqPageContentProps = {
   locale?: Locale;

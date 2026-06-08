@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import path from "node:path";
 
 const nextConfig: NextConfig = {
   /** Allows dev overlay/HMR when opening the app via LAN URL (e.g. phone). Router IPs change — edit if yours differs. */
@@ -28,7 +29,7 @@ const nextConfig: NextConfig = {
 
   // Fixes "inferred your workspace root" when a stray lockfile exists in a parent folder.
   turbopack: {
-    root: import.meta.dirname,
+    root: path.join(__dirname),
   },
 };
 

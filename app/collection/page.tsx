@@ -6,6 +6,14 @@ import ProductCollectionSection from "@/components/ProductCollectionSection";
 import MIRRAICustomTeaser from "@/components/MIRRAICustomTeaser";
 import HomepageFinale from "@/components/HomepageFinale";
 import { DEFAULT_LOCALE, getDictionary, getLocalizedHref, type Locale } from "@/lib/i18n";
+import { createPageMetadata } from "@/lib/seo";
+
+export const metadata = createPageMetadata({
+  title: "Collection | MIRRAI",
+  description: "Explore MIRRAI smart mirror collections for refined interiors.",
+  path: "/collection",
+  image: "/images/collection-section.png",
+});
 
 export function CollectionPageContent({ locale = DEFAULT_LOCALE }: { locale?: Locale }) {
   const dictionary = getDictionary(locale);

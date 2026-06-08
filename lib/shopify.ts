@@ -1,6 +1,7 @@
 import { createHmac, randomBytes, timingSafeEqual } from "node:crypto";
 import { readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
+import { getSiteOriginUrl } from "@/lib/site-url";
 
 type ShopifyEnv = {
   apiKey: string;
@@ -73,9 +74,9 @@ export function getShopifyStateCookieName() {
   return SHOPIFY_STATE_COOKIE;
 }
 
-export function buildShopifyAuthUrl(requestUrl: string, state: string) {
+export function buildShopifyAuthUrl(state: string) {
   const { apiKey, shop, scopes } = getShopifyEnv();
-  const redirectUri = new URL("/api/shopify/callback", requestUrl).toString();
+  const redirectUri = getSiteOriginUrl("/api/shopify/callback");
   const authUrl = new URL(`https://${shop}/admin/oauth/authorize`);
 
   authUrl.searchParams.set("client_id", apiKey);

@@ -8,10 +8,10 @@ import {
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   try {
     const state = createShopifyOAuthState();
-    const authUrl = buildShopifyAuthUrl(request.url, state);
+    const authUrl = buildShopifyAuthUrl(state);
     const response = NextResponse.redirect(authUrl);
 
     response.cookies.set(getShopifyStateCookieName(), state, {

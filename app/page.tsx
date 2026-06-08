@@ -6,6 +6,13 @@ import MoonIntroChoice from "@/components/MoonIntroChoice";
 import ProductCollectionSection from "@/components/ProductCollectionSection";
 import ProfessionalPartnersSection from "@/components/ProfessionalPartnersSection";
 import { DEFAULT_LOCALE, type Locale } from "@/lib/i18n";
+import { createPageMetadata } from "@/lib/seo";
+
+export const metadata = createPageMetadata({
+  title: "Mirrai — More Than a Mirror",
+  description: "Entertainment, hidden in reflection.",
+  path: "/",
+});
 
 export function HomePageContent({ locale = DEFAULT_LOCALE }: { locale?: Locale }) {
   return (

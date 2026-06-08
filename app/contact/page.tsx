@@ -2,6 +2,13 @@ import SiteNavbar from "@/components/SiteNavbar";
 import HomepageFinale from "@/components/HomepageFinale";
 import ContactForm from "@/components/ContactForm";
 import { DEFAULT_LOCALE, getDictionary, type Locale } from "@/lib/i18n";
+import { createPageMetadata } from "@/lib/seo";
+
+export const metadata = createPageMetadata({
+  title: "Contact Us | MIRRAI",
+  description: "Contact MIRRAI for questions, sizing guidance, custom mirrors, and project support.",
+  path: "/contact",
+});
 
 type ContactPageContentProps = {
   locale?: Locale;
