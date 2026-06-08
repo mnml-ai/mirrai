@@ -1,4 +1,6 @@
 import Hero from "@/components/Hero";
+import HomepageFaqPreview from "@/components/HomepageFaqPreview";
+import HomepageFaqSeparator from "@/components/HomepageFaqSeparator";
 import HomepageFinale from "@/components/HomepageFinale";
 import InteractionDemoSection from "@/components/InteractionDemoSection";
 import MIRRAICustomTeaser from "@/components/MIRRAICustomTeaser";
@@ -52,6 +54,8 @@ export function HomePageContent({ locale = DEFAULT_LOCALE }: { locale?: Locale }
         <ProductCollectionSection />
         <MIRRAICustomTeaser />
         <ProfessionalPartnersSection locale={locale} />
+        <HomepageFaqSeparator locale={locale} />
+        <HomepageFaqPreview locale={locale} />
       </div>
       <div className="homepage-finale-region">
         <div className="homepage-finale-backdrop" aria-hidden />

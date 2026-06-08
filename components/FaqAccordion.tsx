@@ -7,16 +7,22 @@ type FaqAccordionProps = {
     question: string;
     answer: string;
   }>;
+  idPrefix?: string;
+  defaultOpenIndex?: number | null;
 };
 
-export default function FaqAccordion({ items }: FaqAccordionProps) {
-  const [openIndex, setOpenIndex] = useState<number | null>(null);
+export default function FaqAccordion({
+  items,
+  idPrefix = "faq",
+  defaultOpenIndex = null,
+}: FaqAccordionProps) {
+  const [openIndex, setOpenIndex] = useState<number | null>(defaultOpenIndex);
 
   return (
     <div className="faq-list">
       {items.map((item, index) => {
         const isOpen = openIndex === index;
-        const panelId = `faq-answer-${index}`;
+        const panelId = `${idPrefix}-answer-${index}`;
 
         return (
           <div className="faq-item" key={item.question} data-open={isOpen}>
@@ -30,8 +36,10 @@ export default function FaqAccordion({ items }: FaqAccordionProps) {
               <span>{item.question}</span>
               <b aria-hidden>+</b>
             </button>
-            <div id={panelId} className="faq-answer" hidden={!isOpen}>
-              <p>{item.answer}</p>
+            <div id={panelId} className="faq-answer" aria-hidden={!isOpen}>
+              <div className="faq-answer-inner">
+                <p>{item.answer}</p>
+              </div>
             </div>
           </div>
         );

@@ -10,9 +10,10 @@ import {
 } from "@/lib/i18n";
 import {
   calculateMirraiPrice,
+  getMirraiCompatibleTvSizes,
+  getMirraiMirrorSizes,
+  getMirraiTvSizes,
   MIRRAI_FRAME_COLORS as FRAME_COLORS,
-  MIRRAI_MIRROR_SIZES as MIRROR_SIZES,
-  MIRRAI_TV_SIZES as TV_SIZES,
   type FrameColorKey,
   type LightColorKey,
   type LightKey,
@@ -24,31 +25,46 @@ import type { ProductSlug } from "@/lib/products";
 
 const IMAGE_VERSION = "20260531a";
 
-const PRODUCT_GALLERIES: Record<ProductSlug, string[]> = {
+type ProductGalleryItem = {
+  src: string;
+  type: "image" | "video";
+};
+
+const imageItem = (src: string): ProductGalleryItem => ({ src, type: "image" });
+const videoItem = (src: string): ProductGalleryItem => ({ src, type: "video" });
+
+const PRODUCT_GALLERIES: Record<ProductSlug, ProductGalleryItem[]> = {
   halo: [
-    "/images/products_2560x1440px/halo_mirror.png",
-    "/images/products_2560x1440px/halo_screen1.png",
-    "/images/products_2560x1440px/halo_screen.png",
+    imageItem("/images/products_2560x1440px/halo_mirror.png"),
+    imageItem("/images/products_2560x1440px/halo_screen.png"),
   ],
   frame: [
-    "/images/products_2560x1440px/frame_mirror.png",
-    "/images/products_2560x1440px/frame_screen1.png",
-    "/images/products_2560x1440px/frame_screen.png",
+    imageItem("/images/products_2560x1440px/frame_mirror.png"),
+    imageItem("/images/products_2560x1440px/frame_screen.png"),
+    videoItem("/videos/products/frame/frame_01_muted.MOV"),
+    videoItem("/videos/products/frame/frame_02_muted.MOV"),
+    videoItem("/videos/products/frame/frame_03_muted.MOV"),
   ],
   lounge: [
-    "/images/products_2560x1440px/lounge_mirror.png",
-    "/images/products_2560x1440px/lounge_screen1.png",
-    "/images/products_2560x1440px/lounge_screen.png",
+    imageItem("/images/products_2560x1440px/lounge_mirror.png"),
+    imageItem("/images/products_2560x1440px/lounge_screen.png"),
+    videoItem("/videos/products/lounge/lounge_01_muted.MOV"),
+    videoItem("/videos/products/lounge/lounge_02_muted.MOV"),
+    videoItem("/videos/products/lounge/lounge_03_muted.MOV"),
+    videoItem("/videos/products/lounge/lounge_04_muted.MOV"),
+    videoItem("/videos/products/lounge/lounge_06_muted.MOV"),
+    videoItem("/videos/products/lounge/lounge_07_muted.MOV"),
   ],
   grande: [
-    "/images/products_2560x1440px/grande_mirror.png",
-    "/images/products_2560x1440px/grande_screen1.png",
-    "/images/products_2560x1440px/grande_screen.png",
+    imageItem("/images/products_2560x1440px/grande_mirror.png"),
+    imageItem("/images/products_2560x1440px/grande_screen.png"),
   ],
   classic: [
-    "/images/products_2560x1440px/classic_mirror.png",
-    "/images/products_2560x1440px/classic_screen1.png",
-    "/images/products_2560x1440px/classic_screen.png",
+    imageItem("/images/products_2560x1440px/classic_mirror.png"),
+    imageItem("/images/products_2560x1440px/classic_screen.png"),
+    imageItem("/images/products_2560x1440px/classic_real.png"),
+    videoItem("/videos/products/classic_on_muted.MOV"),
+    videoItem("/videos/products/classic_turnsOn_muted.MOV"),
   ],
 };
 
@@ -181,6 +197,11 @@ function formatPrice(value: number) {
   return `EGP ${value.toLocaleString("en-US")}`;
 }
 
+function keepVideoMuted(video: HTMLVideoElement) {
+  video.muted = true;
+  video.volume = 0;
+}
+
 function OptionIcon({ type }: { type: "tv" | "cart" | "light" | "lock" | "mirror" | "tools" }) {
   if (type === "light") {
     return (
@@ -250,7 +271,10 @@ export default function ProductConfigurator({
   const product = dictionary.productCollection.products[slug];
   const displayName = product.name.replace("MIRRAI ", "");
   const gallery = PRODUCT_GALLERIES[slug];
+  const mirrorSizes = useMemo(() => getMirraiMirrorSizes(slug), [slug]);
+  const tvSizes = useMemo(() => getMirraiTvSizes(slug), [slug]);
   const [activeImage, setActiveImage] = useState(0);
+  const activeGalleryItem = gallery[activeImage] ?? gallery[0];
   const [sizeIndex, setSizeIndex] = useState<MirrorSizeIndex | null>(null);
   const [frameColor, setFrameColor] = useState<FrameColorKey | null>(null);
   const [tvSize, setTvSize] = useState<TvSize | null>(null);
@@ -260,8 +284,11 @@ export default function ProductConfigurator({
   const [referralCode, setReferralCode] = useState("");
   const [isCreatingCheckout, setIsCreatingCheckout] = useState(false);
   const [checkoutError, setCheckoutError] = useState("");
-  const selectedSize = sizeIndex === null ? null : MIRROR_SIZES[sizeIndex];
-  const maxTvSize = selectedSize?.maxTv ?? 0;
+  const selectedSize = sizeIndex === null ? null : mirrorSizes[sizeIndex] ?? null;
+  const compatibleTvSizes = useMemo(
+    () => (sizeIndex === null ? [] : getMirraiCompatibleTvSizes(slug, sizeIndex)),
+    [slug, sizeIndex]
+  );
   const selectedFrameColor = FRAME_COLORS.find((color) => color.key === frameColor) ?? null;
   const hasLighting = Array.isArray(lights) && lights.length > 0;
   const lightingSelected = lights !== null;
@@ -288,6 +315,10 @@ export default function ProductConfigurator({
       setReferralCode(code.slice(0, 80));
     }
   }, []);
+
+  useEffect(() => {
+    setActiveImage((current) => Math.min(current, gallery.length - 1));
+  }, [gallery.length]);
 
   const price = useMemo(() => {
     if (
@@ -335,7 +366,7 @@ export default function ProductConfigurator({
   };
 
   const selectTvSize = (size: TvSize) => {
-    if (tvSizeLocked || size > maxTvSize) {
+    if (tvSizeLocked || !compatibleTvSizes.includes(size)) {
       return;
     }
 
@@ -447,14 +478,29 @@ export default function ProductConfigurator({
               ‹
             </button>
             <div className="product-gallery-image">
-              <Image
-                src={versioned(gallery[activeImage])}
-                alt={`${product.name} view ${activeImage + 1}`}
-                fill
-                priority
-                sizes="(max-width: 900px) 92vw, 52vw"
-                quality={94}
-              />
+              {activeGalleryItem.type === "video" ? (
+                <video
+                  className="product-gallery-media"
+                  src={versioned(activeGalleryItem.src)}
+                  aria-label={`${product.name} video ${activeImage + 1}`}
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  onLoadedMetadata={(event) => keepVideoMuted(event.currentTarget)}
+                  onVolumeChange={(event) => keepVideoMuted(event.currentTarget)}
+                />
+              ) : (
+                <Image
+                  src={versioned(activeGalleryItem.src)}
+                  alt={`${product.name} view ${activeImage + 1}`}
+                  fill
+                  priority
+                  sizes="(max-width: 900px) 92vw, 52vw"
+                  quality={94}
+                  unoptimized
+                />
+              )}
             </div>
             <button
               className="product-gallery-arrow product-gallery-arrow--next"
@@ -471,24 +517,42 @@ export default function ProductConfigurator({
           </p>
 
           <div className="product-gallery-thumbnails" aria-label="Product thumbnails">
-            {gallery.map((image, index) => (
+            {gallery.map((item, index) => (
               <button
-                key={image}
+                key={item.src}
                 type="button"
                 className="product-gallery-thumbnail"
                 data-active={activeImage === index}
-                aria-label={`Show image ${index + 1}`}
+                data-media={item.type}
+                aria-label={`Show ${item.type} ${index + 1}`}
                 aria-pressed={activeImage === index}
                 onClick={() => setActiveImage(index)}
               >
-                <Image
-                  src={versioned(image)}
-                  alt=""
-                  aria-hidden
-                  fill
-                  sizes="110px"
-                  quality={90}
-                />
+                {item.type === "video" ? (
+                  <>
+                    <video
+                      className="product-gallery-thumbnail-media"
+                      src={versioned(item.src)}
+                      aria-hidden
+                      muted
+                      playsInline
+                      preload="metadata"
+                      onLoadedMetadata={(event) => keepVideoMuted(event.currentTarget)}
+                      onVolumeChange={(event) => keepVideoMuted(event.currentTarget)}
+                    />
+                    <span className="product-gallery-video-badge" aria-hidden>▶</span>
+                  </>
+                ) : (
+                  <Image
+                    src={versioned(item.src)}
+                    alt=""
+                    aria-hidden
+                    fill
+                    sizes="110px"
+                    quality={90}
+                    unoptimized
+                  />
+                )}
               </button>
             ))}
           </div>
@@ -509,16 +573,18 @@ export default function ProductConfigurator({
           <fieldset className="product-config-fieldset">
             <legend>{copy.size}</legend>
             <div className="product-pill-row">
-              {MIRROR_SIZES.map((size, index) => (
+              {mirrorSizes.map((size, index) => (
                 <button
                   key={size.label}
                   type="button"
                   className="product-pill"
                   data-active={sizeIndex === index}
                   aria-pressed={sizeIndex === index}
-                  onClick={() => selectSize(index as MirrorSizeIndex)}
+                  onClick={() => selectSize(index)}
                 >
-                  {size.label}
+                  <span dir="ltr" className="product-dimension">
+                    {size.label}
+                  </span>
                 </button>
               ))}
             </div>
@@ -547,8 +613,8 @@ export default function ProductConfigurator({
           <fieldset className="product-config-fieldset" data-locked={tvSizeLocked}>
             <legend>{copy.tvSize}</legend>
             <div className="product-tv-size-row">
-              {TV_SIZES.map((size) => {
-                const unavailable = !tvSizeLocked && size > maxTvSize;
+              {tvSizes.map((size) => {
+                const unavailable = !tvSizeLocked && !compatibleTvSizes.includes(size);
                 const disabled = tvSizeLocked || unavailable;
 
                 return (

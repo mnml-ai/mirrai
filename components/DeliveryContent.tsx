@@ -1,5 +1,6 @@
 import type { CSSProperties } from "react";
 import HomepageFinale from "@/components/HomepageFinale";
+import LegalCompanyInfo from "@/components/LegalCompanyInfo";
 import SiteNavbar from "@/components/SiteNavbar";
 import { DEFAULT_LOCALE, type Locale } from "@/lib/i18n";
 
@@ -265,16 +266,17 @@ export function DeliveryPageContent({ locale = DEFAULT_LOCALE }: DeliveryPageCon
             <address className="terms-contact-list">
               <span>
                 <strong>{delivery.contact.emailLabel}:</strong>{" "}
-                <a href="mailto:info@mirrai.com">info@mirrai.com</a>
+                <a href="mailto:mirrai@odxstudio.com">mirrai@odxstudio.com</a>
               </span>
               <span>
                 <strong>{delivery.contact.phoneLabel}:</strong>{" "}
-                <a href="tel:+201144582331">+20 114 458 23331</a>
+                <a href="tel:+201228674700">+20 122 867 4700</a>
               </span>
               <span>
                 <strong>{delivery.contact.addressLabel}:</strong> {delivery.contact.address}
               </span>
             </address>
+            <LegalCompanyInfo />
           </div>
         </section>
       </section>

@@ -18,16 +18,30 @@ const SITE_NAV_LINKS = [
   { key: "custom", href: "/custom" },
   { key: "designers", href: "/designers" },
   { key: "developers", href: "/#developers" },
-  { key: "faq", href: "/faq" },
   { key: "contact", href: "/contact" },
 ] as const;
 
-const MOBILE_LOGO_SCALE = 0.77;
+const MOBILE_LOGO_SCALE = 1;
 const MOBILE_LOGO_X = 15;
 const MOBILE_LOGO_Y = 10;
 const MOBILE_MENU_BUTTON_SCALE = 0.9;
 const MOBILE_MENU_BUTTON_X = 4;
 const MOBILE_MENU_BUTTON_Y = -11;
+
+function MirraiLogoTitle() {
+  return (
+    <span className="site-navbar-logo-title" aria-hidden="true">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/images/brand/mirrai-logo-no-slogan-transparent.png"
+        width="1170"
+        height="500"
+        alt=""
+        draggable={false}
+      />
+    </span>
+  );
+}
 
 type SiteNavbarProps = {
   ctaRef?: Ref<HTMLAnchorElement>;
@@ -81,7 +95,7 @@ export default function SiteNavbar({ ctaRef, variant = "all" }: SiteNavbarProps)
               transform: `translate3d(${MOBILE_LOGO_X}px, ${MOBILE_LOGO_Y}px, 0) scale(${MOBILE_LOGO_SCALE})`,
             }}
           >
-            MIRRAI
+            <MirraiLogoTitle />
           </a>
           <button
             className="mobile-hero-menu"
@@ -156,20 +170,15 @@ export default function SiteNavbar({ ctaRef, variant = "all" }: SiteNavbarProps)
           }}
         >
         <a
-          className="nav-logo flex-shrink-0 select-none font-bold"
+          className="nav-logo flex-shrink-0 select-none"
           href={getLocalizedHref("/#home", locale)}
           aria-label={dictionary.nav.logoLabel}
           style={{
-            fontFamily: "var(--font-display)",
-            color: "#1A1A1A",
-            fontSize: "1.1rem",
-            letterSpacing: "0.6em",
-            textTransform: "uppercase",
             pointerEvents: "auto",
             textDecoration: "none",
           }}
         >
-          MIRRAI
+          <MirraiLogoTitle />
         </a>
 
         <ul
