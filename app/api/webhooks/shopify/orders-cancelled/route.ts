@@ -24,6 +24,7 @@ function getErrorDetails(error: unknown) {
 }
 
 export async function POST(request: Request) {
+  console.log("WEBHOOK HIT orders-cancelled");
   const isDevelopment = process.env.NODE_ENV !== "production";
 
   try {
