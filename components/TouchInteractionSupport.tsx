@@ -13,6 +13,12 @@ export default function TouchInteractionSupport() {
 
       document.querySelectorAll("video").forEach((video) => {
         video.muted = true;
+
+        const wasPlaying = !video.paused && !video.ended;
+        if (wasPlaying) {
+          return;
+        }
+
         const previousTime = video.currentTime;
         void video
           .play()
