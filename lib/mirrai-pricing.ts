@@ -33,7 +33,7 @@ const MIRRAI_PRODUCT_MIRROR_SIZES: Partial<
   lounge: [
     { label: "115 x 80 cm", maxTv: 50, tvSizes: [32, 43, 50] },
     { label: "135 x 90 cm", maxTv: 55, tvSizes: [32, 43, 50, 55] },
-    { label: "175 x 110 cm", maxTv: 75, tvSizes: [32, 43, 50, 55, 65, 75] },
+    { label: "175 x 110 cm", maxTv: 75, tvSizes: [32, 43, 65, 75] },
     { label: "200 x 120 cm", maxTv: 85, tvSizes: [32, 43, 50, 55, 65, 75, 85] },
   ],
   grande: [

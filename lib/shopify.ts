@@ -1,7 +1,6 @@
 import { createHmac, randomBytes, timingSafeEqual } from "node:crypto";
 import { readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
-import { logShopifyEnvDiagnostics, resolveShopifyShopEnv } from "@/lib/shopify-env-diagnostics";
 import { getSiteOriginUrl } from "@/lib/site-url";
 
 type ShopifyEnv = {
@@ -34,22 +33,10 @@ function requiredEnv(name: string) {
   const value = process.env[name]?.trim();
 
   if (!value) {
-    logShopifyEnvDiagnostics(name);
     throw new Error(`Missing ${name}.`);
   }
 
   return value;
-}
-
-function requiredShopEnv() {
-  const shop = resolveShopifyShopEnv();
-
-  if (!shop) {
-    logShopifyEnvDiagnostics("SHOPIFY_SHOP");
-    throw new Error("Missing SHOPIFY_SHOP.");
-  }
-
-  return shop.value;
 }
 
 function normalizeShop(value: string) {
@@ -66,7 +53,7 @@ export function getShopifyEnv(): ShopifyEnv {
   return {
     apiKey: requiredEnv("SHOPIFY_API_KEY"),
     apiSecret: requiredEnv("SHOPIFY_API_SECRET"),
-    shop: normalizeShop(requiredShopEnv()),
+    shop: normalizeShop(requiredEnv("SHOPIFY_SHOP")),
     scopes: requiredEnv("SHOPIFY_SCOPES"),
     apiVersion: process.env.SHOPIFY_API_VERSION?.trim() || "2026-04",
   };

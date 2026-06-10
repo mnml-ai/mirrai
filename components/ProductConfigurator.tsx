@@ -1,14 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import {
-  type CSSProperties,
-  type TouchEvent as ReactTouchEvent,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { type CSSProperties, useEffect, useMemo, useState } from "react";
 import {
   DEFAULT_LOCALE,
   getDictionary,
@@ -300,10 +293,10 @@ export default function ProductConfigurator({
   const hasLighting = Array.isArray(lights) && lights.length > 0;
   const lightingSelected = lights !== null;
   const supportsFrontlight = slug === "frame";
-  const tvSizeLocked = sizeIndex === null;
+  const frameColorLocked = sizeIndex === null;
+  const tvSizeLocked = frameColor === null;
   const tvAvailabilityLocked = tvSize === null;
-  const frameColorLocked = tvAvailability === null;
-  const lightingLocked = frameColor === null;
+  const lightingLocked = tvAvailability === null;
   const lightColorLocked = !hasLighting;
   const productReady = Boolean(
     selectedSize
@@ -360,6 +353,18 @@ export default function ProductConfigurator({
     setLightColor(null);
   };
 
+  const selectFrameColor = (color: FrameColorKey) => {
+    if (frameColorLocked) {
+      return;
+    }
+
+    setFrameColor(color);
+    setTvSize(null);
+    setTvAvailability(null);
+    setLights(null);
+    setLightColor(null);
+  };
+
   const selectTvSize = (size: TvSize) => {
     if (tvSizeLocked || !compatibleTvSizes.includes(size)) {
       return;
@@ -367,7 +372,6 @@ export default function ProductConfigurator({
 
     setTvSize(size);
     setTvAvailability(null);
-    setFrameColor(null);
     setLights(null);
     setLightColor(null);
   };
@@ -378,17 +382,6 @@ export default function ProductConfigurator({
     }
 
     setTvAvailability(availability);
-    setFrameColor(null);
-    setLights(null);
-    setLightColor(null);
-  };
-
-  const selectFrameColor = (color: FrameColorKey) => {
-    if (frameColorLocked) {
-      return;
-    }
-
-    setFrameColor(color);
     setLights(null);
     setLightColor(null);
   };
@@ -417,38 +410,6 @@ export default function ProductConfigurator({
 
   const moveImage = (direction: -1 | 1) => {
     setActiveImage((current) => (current + direction + gallery.length) % gallery.length);
-  };
-
-  const swipeStart = useRef<{ x: number; y: number } | null>(null);
-
-  const handleSwipeStart = (event: ReactTouchEvent<HTMLDivElement>) => {
-    const touch = event.touches[0];
-    swipeStart.current = touch ? { x: touch.clientX, y: touch.clientY } : null;
-  };
-
-  const handleSwipeEnd = (event: ReactTouchEvent<HTMLDivElement>) => {
-    const start = swipeStart.current;
-    swipeStart.current = null;
-
-    if (!start || gallery.length < 2) {
-      return;
-    }
-
-    const touch = event.changedTouches[0];
-
-    if (!touch) {
-      return;
-    }
-
-    const deltaX = touch.clientX - start.x;
-    const deltaY = touch.clientY - start.y;
-    const SWIPE_THRESHOLD = 40;
-
-    if (Math.abs(deltaX) < SWIPE_THRESHOLD || Math.abs(deltaX) <= Math.abs(deltaY)) {
-      return;
-    }
-
-    moveImage(deltaX < 0 ? 1 : -1);
   };
 
   const createCheckout = async () => {
@@ -507,11 +468,7 @@ export default function ProductConfigurator({
 
       <div className="product-configurator-grid">
         <div className="product-gallery" aria-label={`${product.name} gallery`}>
-          <div
-            className="product-gallery-stage"
-            onTouchStart={handleSwipeStart}
-            onTouchEnd={handleSwipeEnd}
-          >
+          <div className="product-gallery-stage">
             <button
               className="product-gallery-arrow product-gallery-arrow--prev"
               type="button"
@@ -633,6 +590,26 @@ export default function ProductConfigurator({
             </div>
           </fieldset>
 
+          <fieldset className="product-config-fieldset" data-locked={frameColorLocked}>
+            <legend>{copy.frameColor}</legend>
+            <div className="product-color-row">
+              {FRAME_COLORS.map((color) => (
+                <button
+                  key={color.key}
+                  type="button"
+                  className="product-color-option"
+                  data-active={frameColor === color.key}
+                  disabled={frameColorLocked}
+                  aria-pressed={frameColor === color.key}
+                  onClick={() => selectFrameColor(color.key)}
+                >
+                  <span style={{ "--swatch-color": color.hex } as CSSProperties} />
+                  <span>{copy.frameColors[color.key]}</span>
+                </button>
+              ))}
+            </div>
+          </fieldset>
+
           <fieldset className="product-config-fieldset" data-locked={tvSizeLocked}>
             <legend>{copy.tvSize}</legend>
             <div className="product-tv-size-row">
@@ -678,26 +655,6 @@ export default function ProductConfigurator({
                   <OptionIcon type={key === "pickup" ? "tv" : "cart"} />
                   <strong>{copy.tvOptions[key].title}</strong>
                   <span>{copy.tvOptions[key].body}</span>
-                </button>
-              ))}
-            </div>
-          </fieldset>
-
-          <fieldset className="product-config-fieldset" data-locked={frameColorLocked}>
-            <legend>{copy.frameColor}</legend>
-            <div className="product-color-row">
-              {FRAME_COLORS.map((color) => (
-                <button
-                  key={color.key}
-                  type="button"
-                  className="product-color-option"
-                  data-active={frameColor === color.key}
-                  disabled={frameColorLocked}
-                  aria-pressed={frameColor === color.key}
-                  onClick={() => selectFrameColor(color.key)}
-                >
-                  <span style={{ "--swatch-color": color.hex } as CSSProperties} />
-                  <span>{copy.frameColors[color.key]}</span>
                 </button>
               ))}
             </div>

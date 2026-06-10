@@ -24,7 +24,6 @@ function getErrorDetails(error: unknown) {
 }
 
 export async function POST(request: Request) {
-  console.log("WEBHOOK HIT refunds-create");
   const isDevelopment = process.env.NODE_ENV !== "production";
 
   try {

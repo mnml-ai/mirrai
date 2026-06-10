@@ -7,9 +7,7 @@ import {
   Cormorant_Garamond,
   Noto_Kufi_Arabic,
 } from "next/font/google";
-import GsapScrollSupport from "@/components/GsapScrollSupport";
 import LocaleDocumentAttributes from "@/components/i18n/LocaleDocumentAttributes";
-import TouchInteractionSupport from "@/components/TouchInteractionSupport";
 import { getSiteUrl } from "@/lib/site-url";
 import "./globals.css";
 
@@ -77,8 +75,6 @@ export default function RootLayout({
     >
       <body>
         <LocaleDocumentAttributes />
-        <GsapScrollSupport />
-        <TouchInteractionSupport />
         {children}
       </body>
     </html>

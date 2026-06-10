@@ -281,6 +281,7 @@ export default function CustomBriefForm({ locale = DEFAULT_LOCALE }: { locale?: 
   const whatsappBriefUrl = `https://wa.me/201144582331?text=${encodeURIComponent(dictionary.whatsapp.smartMirrorPrefill)}`;
   const [notes, setNotes] = useState("");
   const [selectedPhoneCountry, setSelectedPhoneCountry] = useState(FAVORITE_COUNTRY_CODES[0]);
+  const [isPhoneCountryOpen, setIsPhoneCountryOpen] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [uploadError, setUploadError] = useState("");
   const [isUploadDragging, setIsUploadDragging] = useState(false);
@@ -491,33 +492,66 @@ export default function CustomBriefForm({ locale = DEFAULT_LOCALE }: { locale?: 
             <label className="brief-field">
               <span className="brief-label">{formCopy.labels.phone} <em>*</em></span>
               <div className="brief-phone-group">
-                <select
-                  className="brief-select brief-phone-code-select"
-                  name="phoneCountryCode"
-                  value={selectedPhoneCountry.name}
-                  aria-label={formCopy.labels.phone}
-                  onChange={(event) => {
-                    const country = FORM_COUNTRIES.find((item) => item.name === event.target.value);
-                    if (country) {
-                      setSelectedPhoneCountry(country);
+                <div
+                  className="brief-phone-code-picker"
+                  onBlur={(event) => {
+                    if (!event.currentTarget.contains(event.relatedTarget)) {
+                      setIsPhoneCountryOpen(false);
                     }
                   }}
                 >
-                  <optgroup label={formCopy.favorites}>
-                    {FAVORITE_COUNTRY_CODES.map((country) => (
-                      <option key={`favorite-${country.name}`} value={country.name}>
-                        {country.name} {country.code}
-                      </option>
-                    ))}
-                  </optgroup>
-                  <optgroup label={formCopy.allCountries}>
-                    {COUNTRY_CODES.map((country) => (
-                      <option key={country.name} value={country.name}>
-                        {country.name} {country.code}
-                      </option>
-                    ))}
-                  </optgroup>
-                </select>
+                  <input
+                    type="hidden"
+                    name="phoneCountryCode"
+                    value={`${selectedPhoneCountry.name} ${selectedPhoneCountry.code}`}
+                  />
+                  <button
+                    className="brief-phone-code"
+                    type="button"
+                    aria-haspopup="listbox"
+                    aria-expanded={isPhoneCountryOpen}
+                    onClick={() => setIsPhoneCountryOpen((open) => !open)}
+                  >
+                    <span>{selectedPhoneCountry.code}</span>
+                    <svg width="12" height="8" viewBox="0 0 12 8" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden>
+                      <polyline points="1 1 6 6 11 1" />
+                    </svg>
+                  </button>
+                  {isPhoneCountryOpen ? (
+                    <div className="brief-phone-code-menu" role="listbox">
+                      <div className="brief-phone-code-group">{formCopy.favorites}</div>
+                      {FAVORITE_COUNTRY_CODES.map((country) => (
+                        <button
+                          key={`favorite-${country.name}`}
+                          type="button"
+                          role="option"
+                          aria-selected={selectedPhoneCountry.name === country.name}
+                          onClick={() => {
+                            setSelectedPhoneCountry(country);
+                            setIsPhoneCountryOpen(false);
+                          }}
+                        >
+                          {country.name} {country.code}
+                        </button>
+                      ))}
+                      <div className="brief-phone-code-group">{formCopy.allCountries}</div>
+                      {COUNTRY_CODES.map((country) => (
+                        <button
+                          key={country.name}
+                          type="button"
+                          role="option"
+                          aria-selected={selectedPhoneCountry.name === country.name}
+                          onClick={() => {
+                            setSelectedPhoneCountry(country);
+                            setIsPhoneCountryOpen(false);
+                          }}
+                        >
+                          {country.name} {country.code}
+                        </button>
+                      ))}
+                    </div>
+                  ) : null}
+                </div>
                 <input name="phone" type="tel" placeholder={formCopy.placeholders.phone} required />
               </div>
             </label>
@@ -941,14 +975,75 @@ export default function CustomBriefForm({ locale = DEFAULT_LOCALE }: { locale?: 
 
         .brief-phone-group {
           display: grid;
-          grid-template-columns: minmax(132px, 0.38fr) 1fr;
+          grid-template-columns: 112px 1fr;
           gap: 0.5rem;
         }
 
-        .brief-phone-code-select {
+        .brief-phone-code-picker {
+          position: relative;
           min-width: 0;
-          padding-inline: 0.85rem 2.1rem;
-          text-overflow: ellipsis;
+        }
+
+        .brief-phone-code {
+          display: inline-flex;
+          width: 100%;
+          min-height: 100%;
+          align-items: center;
+          justify-content: space-between;
+          gap: 0.5rem;
+          min-width: 0;
+          padding: 0.92rem 0.7rem 0.92rem 0.85rem;
+          border: 1px solid rgba(141, 104, 64, 0.28);
+          border-radius: 7px;
+          background: rgba(255, 255, 255, 0.62);
+          font-family: var(--font-body), system-ui, sans-serif;
+          font-size: 0.82rem;
+          color: #1A1A1A;
+          outline: none;
+          cursor: pointer;
+        }
+
+        .brief-phone-code-menu {
+          position: absolute;
+          top: calc(100% + 0.35rem);
+          left: 0;
+          z-index: 20;
+          width: min(340px, 80vw);
+          max-height: 260px;
+          overflow-y: auto;
+          padding: 0.35rem 0;
+          border: 1px solid rgba(141, 104, 64, 0.22);
+          border-radius: 8px;
+          background: #fffaf4;
+          box-shadow: 0 18px 40px rgba(55, 41, 30, 0.16);
+        }
+
+        .brief-phone-code-menu button {
+          display: block;
+          width: 100%;
+          padding: 0.55rem 0.85rem;
+          border: 0;
+          background: transparent;
+          color: #2b211c;
+          font-family: var(--font-body), system-ui, sans-serif;
+          font-size: 0.82rem;
+          text-align: left;
+          cursor: pointer;
+        }
+
+        .brief-phone-code-menu button:hover,
+        .brief-phone-code-menu button[aria-selected="true"] {
+          background: rgba(176, 134, 88, 0.14);
+        }
+
+        .brief-phone-code-group {
+          padding: 0.55rem 0.85rem 0.3rem;
+          color: #8d6840;
+          font-family: var(--font-body), system-ui, sans-serif;
+          font-size: 0.68rem;
+          font-weight: 800;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
         }
 
         .brief-select {

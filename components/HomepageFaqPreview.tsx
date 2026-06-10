@@ -53,11 +53,12 @@ export default function HomepageFaqPreview({
             idPrefix={`homepage-faq-${locale}`}
             defaultOpenIndex={0}
           />
-          <a className="homepage-faq-preview-link" href={getLocalizedHref("/faq", locale)}>
-            <span>{preview.action}</span>
-            <span aria-hidden>{dictionary.common.arrow}</span>
-          </a>
         </div>
+
+        <a className="homepage-faq-preview-link" href={getLocalizedHref("/faq", locale)}>
+          <span>{preview.action}</span>
+          <span aria-hidden>{dictionary.common.arrow}</span>
+        </a>
       </div>
     </section>
   );
