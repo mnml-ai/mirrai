@@ -209,10 +209,11 @@ function HeroMobile({
       }, MOBILE_HERO_AUTO_START_MS);
     };
 
-    prepareAndStart();
+    const startTimer = window.setTimeout(prepareAndStart, 150);
     mobileQuery.addEventListener("change", prepareAndStart);
 
     return () => {
+      window.clearTimeout(startTimer);
       mobileQuery.removeEventListener("change", prepareAndStart);
       timelineRef.current?.kill();
       clearMobileCycle();
@@ -742,12 +743,13 @@ export default function Hero({ locale = DEFAULT_LOCALE }: { locale?: Locale }) {
         <div className="-mt-2 flex flex-col gap-0">
           <div className="clip-wrap pr-2">
             <h1
-              className="hero-line hero-headline-warm-gold leading-[0.92] uppercase whitespace-nowrap"
+              className="hero-line leading-[0.92] uppercase whitespace-nowrap"
               style={{
                 fontSize: "6.35vw",
-                fontWeight: 400,
+                fontWeight: 700,
                 fontFamily: "var(--font-display)",
                 letterSpacing: "-0.045em",
+                color: "#000",
               }}
             >
               {dictionary.homeHero.titleLine1}
@@ -756,12 +758,13 @@ export default function Hero({ locale = DEFAULT_LOCALE }: { locale?: Locale }) {
           {homeHeroTitleLine2 ? (
             <div className="clip-wrap pr-2">
               <h1
-                className="hero-line hero-headline-warm-gold leading-[0.92] uppercase whitespace-nowrap"
+                className="hero-line leading-[0.92] uppercase whitespace-nowrap"
                 style={{
                   fontSize: "6.35vw",
-                  fontWeight: 400,
+                  fontWeight: 700,
                   fontFamily: "var(--font-display)",
                   letterSpacing: "-0.045em",
+                  color: "#000",
                 }}
               >
                 {homeHeroTitleLine2}

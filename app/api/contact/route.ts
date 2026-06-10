@@ -9,9 +9,15 @@ type ContactPayload = {
 };
 
 const CONTACT_EMAIL_SUBJECT = "Website Contact us";
+const DEFAULT_CONTACT_FROM_EMAIL = "MIRRAI <custom.mirrai@odxstudio.com>";
+const DEFAULT_CONTACT_TO_EMAIL = "mirrai@odxstudio.com";
 
 function asString(value: unknown) {
   return typeof value === "string" ? value.trim() : "";
+}
+
+function isValidEmail(value: string) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 }
 
 function escapeHtml(value: string) {
@@ -24,14 +30,14 @@ function escapeHtml(value: string) {
 
 export async function POST(request: Request) {
   try {
-    const resendApiKey = process.env.RESEND_API_KEY;
-    const fromEmail = process.env.CONTACT_FROM_EMAIL;
-    const toEmail = process.env.CONTACT_TO_EMAIL || "mirrai@odxstudio.com";
+    const resendApiKey = process.env.RESEND_API_KEY?.trim();
+    const fromEmail = process.env.CONTACT_FROM_EMAIL?.trim() || DEFAULT_CONTACT_FROM_EMAIL;
+    const toEmail = process.env.CONTACT_TO_EMAIL?.trim() || DEFAULT_CONTACT_TO_EMAIL;
     const isDevelopment = process.env.NODE_ENV !== "production";
 
-    if (!resendApiKey || !fromEmail) {
+    if (!resendApiKey) {
       return NextResponse.json(
-        { error: "Missing contact email environment variables." },
+        { error: "Missing RESEND_API_KEY." },
         { status: 500 }
       );
     }
@@ -43,14 +49,21 @@ export async function POST(request: Request) {
         : {};
 
     const name = asString(body.name);
-    const email = asString(body.email);
+    const customerEmail = asString(body.email);
     const phone = asString(body.phone);
     const visitorSubject = asString(body.subject);
     const message = asString(body.message);
 
-    if (!name || !email || !phone || !message) {
+    if (!name || !customerEmail || !phone || !message) {
       return NextResponse.json(
         { error: "Name, email, phone, and message are required." },
+        { status: 400 }
+      );
+    }
+
+    if (!isValidEmail(customerEmail)) {
+      return NextResponse.json(
+        { error: "A valid customer email is required." },
         { status: 400 }
       );
     }
@@ -59,9 +72,9 @@ export async function POST(request: Request) {
       "New MIRRAI website contact message",
       "",
       `Name: ${name}`,
-      `Email: ${email}`,
+      `Email: ${customerEmail}`,
       `Phone: ${phone}`,
-      visitorSubject ? `Visitor subject: ${visitorSubject}` : "",
+      visitorSubject ? `Subject: ${visitorSubject}` : "",
       "",
       "Message:",
       message,
@@ -72,11 +85,11 @@ export async function POST(request: Request) {
     const html = `
       <h2>New MIRRAI website contact message</h2>
       <p><strong>Name:</strong> ${escapeHtml(name)}</p>
-      <p><strong>Email:</strong> ${escapeHtml(email)}</p>
+      <p><strong>Email:</strong> ${escapeHtml(customerEmail)}</p>
       <p><strong>Phone:</strong> ${escapeHtml(phone)}</p>
       ${
         visitorSubject
-          ? `<p><strong>Visitor subject:</strong> ${escapeHtml(visitorSubject)}</p>`
+          ? `<p><strong>Subject:</strong> ${escapeHtml(visitorSubject)}</p>`
           : ""
       }
       <hr />
@@ -92,9 +105,11 @@ export async function POST(request: Request) {
       },
       body: JSON.stringify({
         from: fromEmail,
-        to: toEmail,
-        reply_to: email,
-        subject: CONTACT_EMAIL_SUBJECT,
+        to: [toEmail],
+        reply_to: customerEmail,
+        subject: visitorSubject
+          ? `${CONTACT_EMAIL_SUBJECT} — ${visitorSubject}`
+          : CONTACT_EMAIL_SUBJECT,
         text,
         html,
       }),

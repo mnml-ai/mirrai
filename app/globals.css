@@ -90,11 +90,8 @@ html[dir="rtl"] :where(
   direction: rtl;
 }
 
-[data-dir="rtl"] .brief-phone-code-menu button {
-  text-align: right;
-}
-
-[data-dir="rtl"] .brief-select {
+[data-dir="rtl"] .brief-select,
+[data-dir="rtl"] .brief-phone-code-select {
   background-position: left 1rem center;
   padding-left: 2.5rem;
   padding-right: 1rem;
@@ -457,9 +454,24 @@ html[dir="rtl"] :where(
 .mobile-hero-nav {
   position: absolute;
   inset: 0 0 auto;
-  z-index: 30;
+  z-index: 50;
   height: 7.5rem;
   pointer-events: none;
+}
+
+/* Sticky mobile nav on inner pages (not inside .mobile-hero) */
+main > nav.site-navbar-mobile.mobile-hero-nav {
+  position: sticky;
+  top: 0;
+  inset: auto;
+  width: 100%;
+  min-height: 4.25rem;
+  height: auto;
+  padding-bottom: 0.35rem;
+  background: rgba(250, 247, 240, 0.94);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index: 50;
 }
 
 .mobile-hero-logo {
@@ -507,7 +519,7 @@ html[dir="rtl"] :where(
   position: absolute;
   top: clamp(2.1rem, 5.2vw, 2.8rem);
   right: clamp(1.55rem, 7vw, 3.8rem);
-  z-index: 34;
+  z-index: 55;
   display: grid;
   gap: 0.33rem;
   width: 2.55rem;
@@ -551,7 +563,7 @@ html[dir="rtl"] :where(
   position: absolute;
   top: clamp(5.2rem, 15vw, 7.2rem);
   right: clamp(1rem, 5vw, 3rem);
-  z-index: 32;
+  z-index: 54;
   display: grid;
   gap: 0.58rem;
   min-width: 12.5rem;
@@ -1072,75 +1084,14 @@ html[dir="rtl"] :where(
 
 .custom-page .brief-phone-group {
   display: grid;
-  grid-template-columns: 112px 1fr;
+  grid-template-columns: minmax(132px, 0.38fr) 1fr;
   gap: 0.5rem;
 }
 
-.custom-page .brief-phone-code-picker {
-  position: relative;
+.custom-page .brief-phone-code-select {
   min-width: 0;
-}
-
-.custom-page .brief-phone-code {
-  display: inline-flex;
-  width: 100%;
-  min-height: 100%;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
-  min-width: 0;
-  padding: 0.92rem 0.7rem 0.92rem 0.85rem;
-  border: 1px solid rgba(141, 104, 64, 0.28);
-  border-radius: 7px;
-  outline: none;
-  background: rgba(255, 255, 255, 0.62);
-  color: #2b211c;
-  font-family: var(--font-body), system-ui, sans-serif;
-  font-size: 0.82rem;
-  cursor: pointer;
-}
-
-.custom-page .brief-phone-code-menu {
-  position: absolute;
-  top: calc(100% + 0.35rem);
-  left: 0;
-  z-index: 20;
-  width: min(340px, 80vw);
-  max-height: 260px;
-  overflow-y: auto;
-  padding: 0.35rem 0;
-  border: 1px solid rgba(141, 104, 64, 0.22);
-  border-radius: 8px;
-  background: #fffaf4;
-  box-shadow: 0 18px 40px rgba(55, 41, 30, 0.16);
-}
-
-.custom-page .brief-phone-code-menu button {
-  display: block;
-  width: 100%;
-  padding: 0.55rem 0.85rem;
-  border: 0;
-  background: transparent;
-  color: #2b211c;
-  font-family: var(--font-body), system-ui, sans-serif;
-  font-size: 0.82rem;
-  text-align: left;
-  cursor: pointer;
-}
-
-.custom-page .brief-phone-code-menu button:hover,
-.custom-page .brief-phone-code-menu button[aria-selected="true"] {
-  background: rgba(176, 134, 88, 0.14);
-}
-
-.custom-page .brief-phone-code-group {
-  padding: 0.55rem 0.85rem 0.3rem;
-  color: #8d6840;
-  font-family: var(--font-body), system-ui, sans-serif;
-  font-size: 0.68rem;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  padding-inline: 0.85rem 2.1rem;
+  text-overflow: ellipsis;
 }
 
 .custom-page .brief-select {
@@ -1472,6 +1423,7 @@ html[dir="rtl"] :where(
   left: clamp(1.65rem, 8.5vw, 4.6rem);
   right: clamp(1.35rem, 6.5vw, 3.6rem);
   z-index: 20;
+  pointer-events: none;
   max-width: 39rem;
   --mobile-text-block-scale: 0.94;
   --mobile-text-block-x: 0px;
@@ -1488,6 +1440,7 @@ html[dir="rtl"] :where(
 }
 
 .mobile-hero-text-block {
+  pointer-events: auto;
   transform-origin: left top;
   transform:
     translate3d(var(--mobile-text-block-x), var(--mobile-text-block-y), 0)
@@ -1545,6 +1498,7 @@ html[dir="rtl"] :where(
   gap: clamp(0.85rem, 3.7vw, 1.4rem);
   align-items: center;
   margin-top: clamp(1.45rem, 5.4vw, 2.35rem);
+  pointer-events: auto;
   transform-origin: left top;
   will-change: transform;
 }
@@ -1554,8 +1508,13 @@ html[dir="rtl"] :where(
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  position: relative;
+  z-index: 1;
   min-width: 0;
   height: clamp(3rem, 11.7vw, 4.35rem);
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  cursor: pointer;
   padding: 0 clamp(1.45rem, 6vw, 2.75rem);
   border-radius: 999px;
   font-family: var(--font-body), system-ui, sans-serif;
@@ -7301,14 +7260,28 @@ section.interaction-demo-section[data-try-me-style="gold-pulse"] .mirror-press-p
   }
 }
 
+/* Coarse pointers (phones/tablets): faster taps, no double-tap zoom delay on controls */
+@media (hover: none) and (pointer: coarse) {
+  a,
+  button,
+  summary,
+  [role="button"],
+  label[for] {
+    touch-action: manipulation;
+  }
+}
+
+/* Try Me interaction demo — desktop / MacBook only (requires mouse cursor) */
+@media (max-width: 1279px) {
+  section.interaction-demo-section {
+    display: none !important;
+  }
+}
+
 /* iPhone/mobile polish pass */
 @media (max-width: 767px) {
   .mobile-hero-feature-strip {
     display: none;
-  }
-
-  .interaction-demo-section {
-    display: none !important;
   }
 
   .product-collection-action {
@@ -7786,6 +7759,7 @@ section.interaction-demo-section[data-try-me-style="gold-pulse"] .mirror-press-p
   display: grid;
   min-height: 420px;
   place-items: center;
+  touch-action: pan-y;
 }
 
 .product-gallery-stage::before {
@@ -8534,6 +8508,7 @@ section.interaction-demo-section[data-try-me-style="gold-pulse"] .mirror-press-p
 }
 
 .contact-page {
+  position: relative;
   min-height: 100vh;
   overflow: hidden;
   background:
@@ -10347,6 +10322,11 @@ section.interaction-demo-section[data-try-me-style="gold-pulse"] .mirror-press-p
   white-space: pre-line;
 }
 
+.homepage-faq-preview-list {
+  position: relative;
+  z-index: 2;
+}
+
 .homepage-faq-preview-list .faq-list,
 .homepage-faq-preview-list .faq-item {
   border-color: rgba(23, 22, 20, 0.14);
@@ -10361,13 +10341,14 @@ section.interaction-demo-section[data-try-me-style="gold-pulse"] .mirror-press-p
 }
 
 .homepage-faq-preview-link {
-  grid-column: 2;
   display: inline-flex;
   width: fit-content;
   align-items: center;
   gap: 12px;
   min-height: 52px;
-  margin-top: -54px;
+  margin-top: 28px;
+  position: relative;
+  z-index: 1;
   padding: 0 28px;
   border: 1px solid rgba(17, 17, 17, 0.84);
   border-radius: 999px;
@@ -10409,8 +10390,7 @@ section.interaction-demo-section[data-try-me-style="gold-pulse"] .mirror-press-p
   }
 
   .homepage-faq-preview-link {
-    grid-column: 1;
-    margin-top: 0;
+    margin-top: 24px;
   }
 }
 
@@ -10604,6 +10584,9 @@ section.interaction-demo-section[data-try-me-style="gold-pulse"] .mirror-press-p
   cursor: pointer;
   font: inherit;
   text-align: left;
+  position: relative;
+  z-index: 1;
+  touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
 }
 
