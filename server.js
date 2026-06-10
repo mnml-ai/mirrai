@@ -1,6 +1,8 @@
 // Production entry point for Node hosting (e.g. Hostinger / Passenger).
 // Boots Next.js programmatically and listens on the port/socket provided by the host.
+const { existsSync } = require("node:fs");
 const { createServer } = require("node:http");
+const { join } = require("node:path");
 const next = require("next");
 
 // Resolve to this file's directory so Next finds .next/ and next.config
@@ -12,6 +14,22 @@ process.chdir(dir);
 const rawPort = process.env.PORT;
 const port = rawPort && /^\d+$/.test(rawPort) ? Number(rawPort) : rawPort || 3000;
 const hostname = process.env.HOST || "0.0.0.0";
+
+const buildIdPath = join(dir, ".next", "BUILD_ID");
+const hasProductionBuild = existsSync(buildIdPath);
+
+console.log(`[MIRRAI startup] dir=${dir}`);
+console.log(`[MIRRAI startup] PORT=${rawPort ?? "(unset)"} parsedPort=${port}`);
+console.log(`[MIRRAI startup] NODE_ENV=${process.env.NODE_ENV || "unknown"}`);
+console.log(
+  `[MIRRAI startup] production build ${hasProductionBuild ? "found" : "MISSING"} at ${buildIdPath}`
+);
+
+if (!hasProductionBuild) {
+  console.error(
+    "[MIRRAI startup] No .next production build. Run `npm run build` during deploy (postinstall) before starting server.js."
+  );
+}
 
 const app = next({ dev: false, dir });
 const handle = app.getRequestHandler();
@@ -63,8 +81,16 @@ app
   .prepare()
   .then(() => {
     logShopifyEnvOnStartup();
-    createServer((req, res) => handle(req, res)).listen(port, () => {
-      console.log(`MIRRAI ready (dir=${dir}, port=${port})`);
+
+    const server = createServer((req, res) => handle(req, res));
+
+    server.on("error", (err) => {
+      console.error("[MIRRAI startup] HTTP server error:", err);
+      process.exit(1);
+    });
+
+    server.listen(port, hostname, () => {
+      console.log(`MIRRAI ready (dir=${dir}, host=${hostname}, port=${port})`);
     });
   })
   .catch((err) => {
