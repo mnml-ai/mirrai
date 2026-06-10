@@ -2,18 +2,8 @@ import type { NextConfig } from "next";
 import path from "node:path";
 
 const nextConfig: NextConfig = {
-  /** Allows dev overlay/HMR when opening the app via LAN URL (e.g. phone). Router IPs change — edit if yours differs. */
-  allowedDevOrigins: [
-    "127.0.0.1",
-    "localhost",
-    "192.168.1.192",
-    "192.168.1.187",
-    "192.168.1.186",
-    "192.168.1.182",
-    "192.168.1.167",
-    "192.168.1.146",
-    "192.168.1.112",
-  ],
+  /** Allows dev overlay/HMR when opening the app via LAN URL (e.g. phone). Wildcard covers the whole local subnet. */
+  allowedDevOrigins: ["127.0.0.1", "localhost", "192.168.1.*", "192.168.0.*"],
 
   images: {
     qualities: [75, 90, 92, 94],
