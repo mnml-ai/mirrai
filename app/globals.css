@@ -2049,6 +2049,16 @@ section.interaction-demo-section .interaction-demo-step-icon img {
   animation: bounce-down 1.8s ease-in-out infinite;
 }
 
+/* Hide JS-driven hero layers before GSAP initializes to avoid a pre-hydration
+   flash where every mirror layer paints stacked on top of each other. Scoped to
+   the hero so the Try Me interaction section is unaffected. GSAP sets inline
+   styles that override these once the animation runs. */
+.hero-shell .mirror-ui,
+.hero-shell .mirror-mode-title-layer {
+  opacity: 0;
+  visibility: hidden;
+}
+
 .mirror-ui {
   position: absolute;
   left: 63.06%;
