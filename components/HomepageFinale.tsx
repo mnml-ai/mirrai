@@ -104,7 +104,8 @@ export default function HomepageFinale({
 }: HomepageFinaleProps = {}) {
   const dictionary = getDictionary(locale);
   const whatsappUrl = `https://wa.me/201144582331?text=${encodeURIComponent(dictionary.whatsapp.smartMirrorPrefill)}`;
-  const contactHref = getLocalizedHref("/contact", locale);
+  const siteVisitUrl = "https://calendly.com/custom-mirrai-odxstudio/30min";
+  const bookCallUrl = "https://calendly.com/mirrai-odxstudio/30min";
 
   return (
     <section className="homepage-finale" aria-labelledby={showCta ? "homepage-finale-title" : undefined}>
@@ -123,13 +124,13 @@ export default function HomepageFinale({
             <h2 id="homepage-finale-title">{dictionary.footer.ctaTitle}</h2>
             <p>{dictionary.footer.ctaBody}</p>
             <div className="homepage-final-cta-actions" aria-label={dictionary.common.finalActions}>
-              <a href="/brochure.pdf" className="homepage-final-cta-button homepage-final-cta-button--light">
-                <FinaleIcon type="file" />
-                <span>{dictionary.footer.downloadBrochure}</span>
+              <a href={siteVisitUrl} target="_blank" rel="noreferrer" className="homepage-final-cta-button homepage-final-cta-button--light">
+                <FinaleIcon type="pin" />
+                <span>{dictionary.footer.bookSiteVisit}</span>
               </a>
-              <a href={contactHref} className="homepage-final-cta-button homepage-final-cta-button--bronze">
+              <a href={bookCallUrl} target="_blank" rel="noreferrer" className="homepage-final-cta-button homepage-final-cta-button--bronze">
                 <FinaleIcon type="calendar" />
-                <span>{dictionary.footer.bookConsultation}</span>
+                <span>{dictionary.footer.bookCall}</span>
               </a>
               <a href={whatsappUrl} target="_blank" rel="noreferrer" className="homepage-final-cta-button homepage-final-cta-button--light">
                 <FinaleIcon type="whatsapp" />

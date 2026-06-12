@@ -53,9 +53,9 @@ Please help me with options and pricing.`,
   },
   footer: {
     ctaTitle: "Let's bring your vision to life.",
-    ctaBody: "Download the brochure, book a consultation, or chat with us on WhatsApp.",
-    downloadBrochure: "Download Brochure",
-    bookConsultation: "Book a Consultation",
+    ctaBody: "Book a site visit, schedule a call, or chat with us on WhatsApp.",
+    bookSiteVisit: "Book a Site Visit",
+    bookCall: "Book a Call",
     chatWhatsapp: "Chat on WhatsApp",
     brandCopy:
       "TV Mirror solutions that bring design and hidden entertainment into your space.",
