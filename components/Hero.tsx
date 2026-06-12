@@ -46,6 +46,7 @@ const MOBILE_DEVICE_BLOCK_SCALE = 1.08;
 const MOBILE_DEVICE_BLOCK_X = 0;
 const MOBILE_DEVICE_BLOCK_Y = -262;
 const MOBILE_VIDEO_ANIMATION_SRC = "/videos/Beachhhh-mobile.webp?v=2";
+const DESKTOP_HERO_VIDEO_SRC = "/videos/hero_video.mp4?v=4";
 
 function HeroMobile({
   dictionary,
@@ -659,7 +660,7 @@ export default function Hero({ locale = DEFAULT_LOCALE }: { locale?: Locale }) {
         <video
           ref={mirrorVideoElementRef}
           className="mirror-video-element"
-          src="/videos/hero_video.mp4?v=3"
+          src={DESKTOP_HERO_VIDEO_SRC}
           muted
           playsInline
           preload="auto"
@@ -669,7 +670,7 @@ export default function Hero({ locale = DEFAULT_LOCALE }: { locale?: Locale }) {
             <video
               ref={shutdownTopVideoRef}
               className="mirror-shutdown-video mirror-shutdown-video-top"
-              src="/videos/hero_video.mp4?v=3"
+              src={DESKTOP_HERO_VIDEO_SRC}
               muted
               playsInline
               preload="auto"
@@ -679,7 +680,7 @@ export default function Hero({ locale = DEFAULT_LOCALE }: { locale?: Locale }) {
             <video
               ref={shutdownBottomVideoRef}
               className="mirror-shutdown-video mirror-shutdown-video-bottom"
-              src="/videos/hero_video.mp4?v=3"
+              src={DESKTOP_HERO_VIDEO_SRC}
               muted
               playsInline
               preload="auto"
