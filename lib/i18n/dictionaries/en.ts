@@ -151,6 +151,16 @@ Please help me with options and pricing.`,
         body: "Need a faster reply or have inquiries? Chat with us anytime. We're here for you.",
       },
     },
+    schedulingCards: {
+      siteVisit: {
+        title: "Book a Site Visit",
+        body: "See MIRRAI in your space. Choose a time and we'll visit you on site.",
+      },
+      bookCall: {
+        title: "Book a Call",
+        body: "Have questions or need guidance? Pick a time to speak with our team.",
+      },
+    },
     companyInfo: {
       intro: "MIRRAI is a brand by ODX Studio.",
       companyLabel: "Company:",

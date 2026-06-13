@@ -18,6 +18,8 @@ type ContactPageContentProps = {
 export function ContactPageContent({ locale = DEFAULT_LOCALE }: ContactPageContentProps) {
   const dictionary = getDictionary(locale);
   const contact = dictionary.contactPage;
+  const siteVisitUrl = "https://calendly.com/custom-mirrai-odxstudio/30min";
+  const bookCallUrl = "https://calendly.com/mirrai-odxstudio/30min";
 
   return (
     <main className="contact-page">
@@ -44,6 +46,26 @@ export function ContactPageContent({ locale = DEFAULT_LOCALE }: ContactPageConte
           </span>
           {contact.privacy}
         </p>
+      </section>
+
+      <section className="contact-direct-cards" aria-label={dictionary.common.finalActions}>
+        <a className="contact-direct-card" href={siteVisitUrl} target="_blank" rel="noreferrer">
+          <svg viewBox="0 0 24 24" aria-hidden>
+            <path d="M12 21s6-6 6-11a6 6 0 0 0-12 0c0 5 6 11 6 11Z" />
+            <circle cx="12" cy="10" r="2" />
+          </svg>
+          <strong>{contact.schedulingCards.siteVisit.title}</strong>
+          <span>{contact.schedulingCards.siteVisit.body}</span>
+        </a>
+
+        <a className="contact-direct-card" href={bookCallUrl} target="_blank" rel="noreferrer">
+          <svg viewBox="0 0 24 24" aria-hidden>
+            <path d="M5 5h14v15H5V5Z" />
+            <path d="M8 3v4M16 3v4M5 10h14" />
+          </svg>
+          <strong>{contact.schedulingCards.bookCall.title}</strong>
+          <span>{contact.schedulingCards.bookCall.body}</span>
+        </a>
       </section>
 
       <section className="contact-legal-section" aria-label="MIRRAI legal company information">
