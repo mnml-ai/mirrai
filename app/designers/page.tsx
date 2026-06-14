@@ -3,6 +3,7 @@ import Link from "next/link";
 import HomepageFinale from "@/components/HomepageFinale";
 import SiteNavbar from "@/components/SiteNavbar";
 import { DEFAULT_LOCALE, getDictionary, type Locale } from "@/lib/i18n";
+import { TRADE_EMAIL, TRADE_EMAIL_DISPLAY } from "@/lib/emails";
 import { createPageMetadata } from "@/lib/seo";
 
 export const metadata = createPageMetadata({
@@ -228,12 +229,13 @@ export function DesignersPageContent({ locale = DEFAULT_LOCALE }: { locale?: Loc
           </p>
         </div>
         <div className="designers-trade-action">
-          <Link className="designers-button designers-button--filled" href="mailto:Mirrai@odxstudio.com?subject=MIRRAI%20Trade%20Access">
+          <Link className="designers-button designers-button--filled" href={`mailto:${TRADE_EMAIL}?subject=MIRRAI%20Trade%20Access`}>
             {designersCopy.trade.cta}
             <span aria-hidden>{dictionary.common.arrow}</span>
           </Link>
           <p>
-            {designersCopy.trade.emailLead} <a href="mailto:Mirrai@odxstudio.com">Mirrai@odxstudio.com</a>
+            {designersCopy.trade.emailLead}{" "}
+            <a href={`mailto:${TRADE_EMAIL}`}>{TRADE_EMAIL_DISPLAY}</a>
           </p>
         </div>
         <div className="designers-trade-media" aria-hidden>

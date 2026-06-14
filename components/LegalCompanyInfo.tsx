@@ -1,4 +1,5 @@
 import { DEFAULT_LOCALE, getDictionary, type Locale } from "@/lib/i18n";
+import { INFO_EMAIL_DISPLAY } from "@/lib/emails";
 
 type LegalCompanyInfoProps = {
   variant?: "contact" | "legal";
@@ -39,7 +40,7 @@ function ContactCompanyInfo({ locale }: { locale: Locale }) {
         <div>
           <dt>{companyInfo.emailLabel}</dt>
           <dd>
-            <a href={`mailto:${companyInfo.emailValue}`}>{companyInfo.emailValue}</a>
+            <a href={`mailto:${companyInfo.emailValue}`}>{INFO_EMAIL_DISPLAY}</a>
           </dd>
         </div>
       </dl>

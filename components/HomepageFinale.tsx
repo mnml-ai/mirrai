@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { ODX_LEGAL_LINE } from "@/components/LegalCompanyInfo";
+import { MIRRAI_EMAIL, MIRRAI_EMAIL_DISPLAY } from "@/lib/emails";
 import {
   DEFAULT_LOCALE,
   LOCALE_LABELS,
@@ -177,9 +178,9 @@ export default function HomepageFinale({
               <FinaleIcon type="whatsapp" />
               <span>{dictionary.common.whatsapp}</span>
             </a>
-            <a href="mailto:mirrai@odxstudio.com">
+            <a href={`mailto:${MIRRAI_EMAIL}`}>
               <FinaleIcon type="mail" />
-              <span>mirrai@odxstudio.com</span>
+              <span>{MIRRAI_EMAIL_DISPLAY}</span>
             </a>
             <span>
               <FinaleIcon type="pin" />

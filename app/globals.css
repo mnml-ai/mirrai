@@ -39,8 +39,9 @@ html[dir="rtl"] :where(
     .hero-label,
     .hero-subtitle,
     .mobile-hero-subtitle,
-    .homepage-faq-preview-header > p:last-child,
     .homepage-faq-separator-inner > p:first-child,
+    .homepage-faq-preview-header > p:first-child,
+    .homepage-faq-preview-header > p:last-child,
     .faq-hero-copy > p,
     .terms-hero-copy > p,
     .contact-page-card h2
@@ -51,14 +52,60 @@ html[dir="rtl"] :where(
     .hero-label,
     .hero-subtitle,
     .mobile-hero-subtitle,
-    .homepage-faq-preview-header > p:last-child,
     .homepage-faq-separator-inner > p:first-child,
+    .homepage-faq-preview-header > p:first-child,
+    .homepage-faq-preview-header > p:last-child,
     .faq-hero-copy > p,
     .terms-hero-copy > p,
     .contact-page-card h2
   ) {
   font-family: var(--font-arabic), system-ui, sans-serif;
   font-weight: 500;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+}
+
+/* Arabic: positive letter-spacing and uppercase break cursive connections */
+html[dir="rtl"] :where(
+    p,
+    span,
+    a,
+    button,
+    label,
+    li,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    small,
+    figcaption
+  ),
+[data-dir="rtl"] :where(
+    p,
+    span,
+    a,
+    button,
+    label,
+    li,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    small,
+    figcaption
+  ) {
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+}
+
+html[dir="rtl"] :where(.uppercase, [class*="tracking-"]),
+[data-dir="rtl"] :where(.uppercase, [class*="tracking-"]) {
+  letter-spacing: 0 !important;
+  text-transform: none !important;
 }
 
 [data-dir="rtl"] .hero-label,
@@ -275,7 +322,8 @@ html[dir="rtl"] :where(
   [data-dir="rtl"] .custom-page .custom-hero-kicker {
     max-width: 15rem;
     margin-inline-start: auto;
-    letter-spacing: 0;
+    letter-spacing: 0 !important;
+    text-transform: none !important;
     line-height: 1.35;
   }
 
@@ -337,6 +385,36 @@ html[dir="rtl"] :where(
   height: 100svh;
   max-height: 100svh;
   min-height: 0;
+  --hero-mirror-left: 63.06%;
+  --hero-mirror-top: 25.67%;
+  --hero-mirror-width: 30.33%;
+  --hero-mirror-height: 46.19%;
+}
+
+.hero-shell .hero-product-image {
+  object-fit: cover;
+  object-position: center center;
+}
+
+/* iPad / tablet landscape — tuned on device at 80.5% */
+@media (min-width: 768px) and (max-width: 1366px) and (orientation: landscape) {
+  .hero-shell .hero-product-image {
+    object-position: 80.5% center !important;
+  }
+}
+
+/* iPad portrait — hero image + mirror animation stack tuned at 90% / 78% */
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: portrait) {
+  .hero-shell {
+    --hero-mirror-left: 78%;
+    --hero-mirror-top: 27%;
+    --hero-mirror-width: 26%;
+    --hero-mirror-height: 36%;
+  }
+
+  .hero-shell .hero-product-image {
+    object-position: 90% center !important;
+  }
 }
 
 [data-dir="rtl"] .hero-shell .hero-copy {
@@ -351,6 +429,8 @@ html[dir="rtl"] :where(
   font-size: 0.864rem !important;
   white-space: normal;
   text-wrap: balance;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
 }
 
 [data-dir="rtl"] .hero-shell .hero-copy .hero-line {
@@ -366,10 +446,14 @@ html[dir="rtl"] :where(
 
 [data-dir="rtl"] .hero-shell .hero-copy .hero-watch span {
   font-size: 0.696rem !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
 }
 
 [data-dir="rtl"] .hero-shell .hero-scroll > span {
   font-size: 0.744rem !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
 }
 
 [data-dir="rtl"] .hero-shell .hero-copy .clip-wrap {
@@ -760,6 +844,16 @@ html[dir="rtl"] :where(
 .site-navbar-desktop .nav-link[data-active="true"]::after {
   opacity: 1;
   transform: scaleX(1);
+}
+
+[data-dir="rtl"] .site-navbar-desktop .nav-link,
+[data-dir="rtl"] .site-navbar-desktop .nav-cta,
+[data-dir="rtl"] .site-navbar-language,
+[data-dir="rtl"] .site-navbar-language a,
+[data-dir="rtl"] .mobile-hero-menu-panel a,
+[data-dir="rtl"] .mobile-hero-menu-languages a {
+  letter-spacing: 0 !important;
+  text-transform: none !important;
 }
 
 .custom-page .custom-hero-section {
@@ -2225,6 +2319,15 @@ section.interaction-demo-section .interaction-demo-step-icon img {
 .hero-shell .mirror-mode-title-layer {
   opacity: 0;
   visibility: hidden;
+}
+
+.hero-shell .mirror-ui,
+.hero-shell .mirror-video-preview,
+.hero-shell .mirror-turnon-layer {
+  left: var(--hero-mirror-left);
+  top: var(--hero-mirror-top);
+  width: var(--hero-mirror-width);
+  height: var(--hero-mirror-height);
 }
 
 .mirror-ui {
@@ -10435,6 +10538,13 @@ section.interaction-demo-section[data-try-me-style="gold-pulse"] .mirror-press-p
 }
 
 [data-dir="rtl"] .homepage-faq-separator-inner h2 {
+  font-weight: 600;
+}
+
+[data-dir="rtl"] .homepage-faq-separator-inner > p:first-child,
+[data-dir="rtl"] .homepage-faq-preview-header > p:first-child {
+  letter-spacing: 0 !important;
+  text-transform: none !important;
   font-weight: 600;
 }
 

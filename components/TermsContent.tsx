@@ -3,6 +3,7 @@ import HomepageFinale from "@/components/HomepageFinale";
 import LegalCompanyInfo from "@/components/LegalCompanyInfo";
 import SiteNavbar from "@/components/SiteNavbar";
 import { DEFAULT_LOCALE, type Locale } from "@/lib/i18n";
+import { MIRRAI_EMAIL, MIRRAI_EMAIL_DISPLAY } from "@/lib/emails";
 
 type TermsSection = {
   title: string;
@@ -381,7 +382,7 @@ export function TermsPageContent({ locale = DEFAULT_LOCALE }: TermsPageContentPr
             <address className="terms-contact-list">
               <span>
                 <strong>{terms.contact.emailLabel}:</strong>{" "}
-                <a href="mailto:mirrai@odxstudio.com">mirrai@odxstudio.com</a>
+                <a href={`mailto:${MIRRAI_EMAIL}`}>{MIRRAI_EMAIL_DISPLAY}</a>
               </span>
               <span>
                 <strong>{terms.contact.phoneLabel}:</strong>{" "}

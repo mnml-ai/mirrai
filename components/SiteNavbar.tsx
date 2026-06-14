@@ -186,6 +186,7 @@ export default function SiteNavbar({ ctaRef, variant = "all" }: SiteNavbarProps)
     };
   }, [pathname]);
 
+  const isArabic = locale === "ar";
   const navHidden = isNavHidden && !isMobileMenuOpen;
   const navStateProps = {
     "data-at-top": isAtTop,
@@ -304,8 +305,8 @@ export default function SiteNavbar({ ctaRef, variant = "all" }: SiteNavbarProps)
                     color: isActive ? "#C47640" : "#3A3A3A",
                     fontSize: "0.68rem",
                     fontWeight: isActive ? 700 : 500,
-                    letterSpacing: "0.16em",
-                    textTransform: "uppercase",
+                    letterSpacing: isArabic ? "0" : "0.16em",
+                    textTransform: isArabic ? "none" : "uppercase",
                     whiteSpace: "nowrap",
                     textDecoration: "none",
                   }}
@@ -330,7 +331,7 @@ export default function SiteNavbar({ ctaRef, variant = "all" }: SiteNavbarProps)
               fontFamily: "var(--font-body)",
               fontSize: "0.68rem",
               fontWeight: 700,
-              letterSpacing: "0.12em",
+              letterSpacing: isArabic ? "0" : "0.12em",
             }}
           >
             {languageLinks.map((link, index) => (
@@ -359,8 +360,8 @@ export default function SiteNavbar({ ctaRef, variant = "all" }: SiteNavbarProps)
             fontFamily: "var(--font-body)",
             fontSize: "0.72rem",
             fontWeight: 500,
-            letterSpacing: "0.18em",
-            textTransform: "uppercase",
+            letterSpacing: isArabic ? "0" : "0.18em",
+            textTransform: isArabic ? "none" : "uppercase",
             border: "1px solid #1A1A1A",
             borderRadius: "999px",
             padding: "0.65rem 1.85rem",

@@ -330,9 +330,11 @@ function HeroMobile({
 
 export default function Hero({ locale = DEFAULT_LOCALE }: { locale?: Locale }) {
   const dictionary = getDictionary(locale);
+  const isArabic = locale === "ar";
   const homeHeroTitleLine2 =
     "titleLine2" in dictionary.homeHero ? dictionary.homeHero.titleLine2 : "";
   const containerRef = useRef<HTMLElement>(null);
+  const heroProductImageRef = useRef<HTMLImageElement>(null);
   const mirrorUiRef = useRef<HTMLDivElement>(null);
   const mirrorUiInnerRef = useRef<HTMLDivElement>(null);
   const mirrorVideoRef = useRef<HTMLDivElement>(null);
@@ -576,16 +578,16 @@ export default function Hero({ locale = DEFAULT_LOCALE }: { locale?: Locale }) {
       >
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
+        ref={heroProductImageRef}
         src="/hero-product.png?v=20260531a"
         alt=""
         aria-hidden
+        className="hero-product-image"
         style={{
           position: "absolute",
           inset: 0,
           width: "100%",
           height: "100%",
-          objectFit: "cover",
-          objectPosition: "center center",
           userSelect: "none",
           pointerEvents: "none",
         }}
@@ -697,10 +699,10 @@ export default function Hero({ locale = DEFAULT_LOCALE }: { locale?: Locale }) {
         aria-hidden
         style={{
           position: "absolute",
-          left: "63.06%",
-          top: "25.67%",
-          width: "30.33%",
-          height: "46.19%",
+          left: "var(--hero-mirror-left, 63.06%)",
+          top: "var(--hero-mirror-top, 25.67%)",
+          width: "var(--hero-mirror-width, 30.33%)",
+          height: "var(--hero-mirror-height, 46.19%)",
           zIndex: 25,
         }}
       >
@@ -729,14 +731,15 @@ export default function Hero({ locale = DEFAULT_LOCALE }: { locale?: Locale }) {
         }}
       >
         <p
-          className="hero-label font-medium uppercase"
+          className={`hero-label font-medium${isArabic ? "" : " uppercase"}`}
           style={{
             color: "#C47640",
             fontFamily: "var(--font-body)",
             fontSize: "0.72rem",
-            letterSpacing: "0.16em",
+            letterSpacing: isArabic ? "0" : "0.16em",
+            textTransform: isArabic ? "none" : "uppercase",
             textAlign: "left",
-            whiteSpace: "nowrap",
+            whiteSpace: isArabic ? "normal" : "nowrap",
           }}
         >
           {dictionary.homeHero.kicker}
@@ -745,12 +748,13 @@ export default function Hero({ locale = DEFAULT_LOCALE }: { locale?: Locale }) {
         <div className="-mt-2 flex flex-col gap-0">
           <div className="clip-wrap pr-2">
             <h1
-              className="hero-line leading-[0.92] uppercase whitespace-nowrap"
+              className={`hero-line leading-[0.92]${isArabic ? "" : " uppercase whitespace-nowrap"}`}
               style={{
                 fontSize: "6.35vw",
                 fontWeight: 700,
                 fontFamily: "var(--font-display)",
-                letterSpacing: "-0.045em",
+                letterSpacing: isArabic ? "0" : "-0.045em",
+                textTransform: isArabic ? "none" : "uppercase",
                 color: "#000",
               }}
             >
@@ -760,12 +764,13 @@ export default function Hero({ locale = DEFAULT_LOCALE }: { locale?: Locale }) {
           {homeHeroTitleLine2 ? (
             <div className="clip-wrap pr-2">
               <h1
-                className="hero-line leading-[0.92] uppercase whitespace-nowrap"
+                className={`hero-line leading-[0.92]${isArabic ? "" : " uppercase whitespace-nowrap"}`}
                 style={{
                   fontSize: "6.35vw",
                   fontWeight: 700,
                   fontFamily: "var(--font-display)",
-                  letterSpacing: "-0.045em",
+                  letterSpacing: isArabic ? "0" : "-0.045em",
+                  textTransform: isArabic ? "none" : "uppercase",
                   color: "#000",
                 }}
               >
@@ -829,11 +834,12 @@ export default function Hero({ locale = DEFAULT_LOCALE }: { locale?: Locale }) {
             </svg>
           </div>
           <span
-            className="font-medium uppercase text-zinc-700 transition-colors group-hover:text-zinc-900"
+            className={`font-medium text-zinc-700 transition-colors group-hover:text-zinc-900${isArabic ? "" : " uppercase"}`}
             style={{
               fontFamily: "var(--font-body)",
               fontSize: "0.58rem",
-              letterSpacing: "0.16em",
+              letterSpacing: isArabic ? "0" : "0.16em",
+              textTransform: isArabic ? "none" : "uppercase",
             }}
           >
             {dictionary.homeHero.watchTransformation}
@@ -849,7 +855,14 @@ export default function Hero({ locale = DEFAULT_LOCALE }: { locale?: Locale }) {
           bottom: "8.4%",
         }}
       >
-        <span className="text-[0.62rem] tracking-[0.25em] uppercase text-zinc-400">
+        <span
+          className={`text-[0.62rem] text-zinc-400${isArabic ? "" : " tracking-[0.25em] uppercase"}`}
+          style={
+            isArabic
+              ? { letterSpacing: "0", textTransform: "none" }
+              : undefined
+          }
+        >
           {dictionary.homeHero.scroll}
         </span>
         <svg className="scroll-arrow" width="14" height="22" viewBox="0 0 14 22" fill="none">

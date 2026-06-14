@@ -3,6 +3,7 @@ import HomepageFinale from "@/components/HomepageFinale";
 import LegalCompanyInfo from "@/components/LegalCompanyInfo";
 import SiteNavbar from "@/components/SiteNavbar";
 import { DEFAULT_LOCALE, type Locale } from "@/lib/i18n";
+import { MIRRAI_EMAIL, MIRRAI_EMAIL_DISPLAY } from "@/lib/emails";
 
 type RefundSection = {
   title: string;
@@ -254,7 +255,7 @@ export function RefundPageContent({ locale = DEFAULT_LOCALE }: RefundPageContent
             <address className="terms-contact-list">
               <span>
                 <strong>{refund.contact.emailLabel}:</strong>{" "}
-                <a href="mailto:mirrai@odxstudio.com">mirrai@odxstudio.com</a>
+                <a href={`mailto:${MIRRAI_EMAIL}`}>{MIRRAI_EMAIL_DISPLAY}</a>
               </span>
               <span>
                 <strong>{refund.contact.phoneLabel}:</strong>{" "}

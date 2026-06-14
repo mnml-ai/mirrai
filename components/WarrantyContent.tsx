@@ -3,6 +3,7 @@ import HomepageFinale from "@/components/HomepageFinale";
 import LegalCompanyInfo from "@/components/LegalCompanyInfo";
 import SiteNavbar from "@/components/SiteNavbar";
 import { DEFAULT_LOCALE, type Locale } from "@/lib/i18n";
+import { MIRRAI_EMAIL, MIRRAI_EMAIL_DISPLAY } from "@/lib/emails";
 
 type WarrantySection = {
   title: string;
@@ -328,7 +329,7 @@ export function WarrantyPageContent({ locale = DEFAULT_LOCALE }: WarrantyPageCon
             <address className="terms-contact-list">
               <span>
                 <strong>{warranty.contact.emailLabel}:</strong>{" "}
-                <a href="mailto:mirrai@odxstudio.com">mirrai@odxstudio.com</a>
+                <a href={`mailto:${MIRRAI_EMAIL}`}>{MIRRAI_EMAIL_DISPLAY}</a>
               </span>
               <span>
                 <strong>{warranty.contact.phoneLabel}:</strong>{" "}
