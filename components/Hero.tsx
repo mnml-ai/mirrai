@@ -224,11 +224,13 @@ function HeroMobile({
   }, [clearMobileCycle, startMobileTransformation]);
 
   return (
-    <section
-      ref={containerRef}
-      className="mobile-hero relative w-full overflow-hidden md:hidden"
-      aria-label={dictionary.homeHero.mobileAriaLabel}
-    >
+    <>
+      <SiteNavbar variant="mobile" />
+      <section
+        ref={containerRef}
+        className="mobile-hero relative w-full overflow-hidden md:hidden"
+        aria-label={dictionary.homeHero.mobileAriaLabel}
+      >
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src="/mobile/hero-background-mobile.png?v=20260531a"
@@ -239,8 +241,6 @@ function HeroMobile({
           transform: `translate3d(${MOBILE_BACKGROUND_X}px, ${MOBILE_BACKGROUND_Y}px, 0) scale(${MOBILE_BACKGROUND_SCALE})`,
         }}
       />
-
-      <SiteNavbar variant="mobile" />
 
       <div className="mobile-hero-copy">
         <div className="mobile-hero-text-block">
@@ -324,6 +324,7 @@ function HeroMobile({
       </div>
 
     </section>
+    </>
   );
 }
 

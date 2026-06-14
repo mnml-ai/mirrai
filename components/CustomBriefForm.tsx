@@ -711,7 +711,7 @@ export default function CustomBriefForm({ locale = DEFAULT_LOCALE }: { locale?: 
 
         .brief-card {
           max-width: 1188px;
-          margin: 0 auto -169px;
+          margin: 0 auto;
           background: rgba(255, 252, 247, 0.96);
           border: 1px solid rgba(150, 112, 74, 0.18);
           border-radius: 22px;
@@ -719,9 +719,15 @@ export default function CustomBriefForm({ locale = DEFAULT_LOCALE }: { locale?: 
           display: grid;
           grid-template-columns: 1fr;
           overflow: hidden;
-          transform: translateY(-169px);
           backdrop-filter: blur(8px);
           -webkit-backdrop-filter: blur(8px);
+        }
+
+        @media (min-width: 768px) {
+          .brief-card {
+            margin-bottom: -169px;
+            transform: translateY(-169px);
+          }
         }
 
         /* Sidebar */
@@ -1261,6 +1267,7 @@ export default function CustomBriefForm({ locale = DEFAULT_LOCALE }: { locale?: 
           .brief-section {
             padding-inline: 10px;
             padding-bottom: 56px;
+            margin-top: clamp(12px, 3vw, 20px);
           }
 
           .brief-card {
@@ -1268,6 +1275,8 @@ export default function CustomBriefForm({ locale = DEFAULT_LOCALE }: { locale?: 
             max-width: 100%;
             min-width: 0;
             border-radius: 16px;
+            transform: none;
+            margin: 0 auto;
           }
 
           .brief-sidebar,

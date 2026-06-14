@@ -28,7 +28,11 @@ const MOBILE_MENU_BUTTON_SCALE = 0.9;
 const MOBILE_MENU_BUTTON_X = 4;
 const MOBILE_MENU_BUTTON_Y = -11;
 const NAV_SCROLL_THRESHOLD = 100;
-const NAV_SCROLL_DELTA = 8;
+const NAV_SCROLL_DELTA = 6;
+
+function getScrollY() {
+  return window.scrollY || document.documentElement.scrollTop || 0;
+}
 
 function MirraiLogoTitle() {
   return (
@@ -55,7 +59,9 @@ export default function SiteNavbar({ ctaRef, variant = "all" }: SiteNavbarProps)
   const [isAtTop, setIsAtTop] = useState(true);
   const [isNavHidden, setIsNavHidden] = useState(false);
   const lastScrollYRef = useRef(0);
+  const isNavHiddenRef = useRef(false);
   const tickingRef = useRef(false);
+  const touchStartYRef = useRef(0);
   const pathname = usePathname();
   const locale = getLocaleFromPathname(pathname);
   const dictionary = getDictionary(locale);
@@ -90,37 +96,94 @@ export default function SiteNavbar({ ctaRef, variant = "all" }: SiteNavbarProps)
   ];
 
   useEffect(() => {
-    const updateNav = () => {
-      const scrollY = window.scrollY;
-      const delta = scrollY - lastScrollYRef.current;
+    const setNavHidden = (hidden: boolean) => {
+      if (isNavHiddenRef.current === hidden) return;
+      isNavHiddenRef.current = hidden;
+      setIsNavHidden(hidden);
+    };
 
-      if (scrollY < NAV_SCROLL_THRESHOLD) {
+    const updateNavFromScroll = (scrollY: number) => {
+      const previousScrollY = lastScrollYRef.current;
+      const delta = scrollY - previousScrollY;
+      lastScrollYRef.current = scrollY;
+
+      if (scrollY <= NAV_SCROLL_THRESHOLD) {
         setIsAtTop(true);
-        setIsNavHidden(false);
-      } else {
-        setIsAtTop(false);
-
-        if (delta > NAV_SCROLL_DELTA) {
-          setIsNavHidden(true);
-        } else if (delta < 0) {
-          setIsNavHidden(false);
-        }
+        setNavHidden(false);
+        return;
       }
 
-      lastScrollYRef.current = scrollY;
-      tickingRef.current = false;
+      setIsAtTop(false);
+
+      if (delta > NAV_SCROLL_DELTA) {
+        setNavHidden(true);
+      } else if (delta < 0) {
+        setNavHidden(false);
+      }
     };
 
-    const onScroll = () => {
+    const scheduleScrollUpdate = () => {
       if (tickingRef.current) return;
       tickingRef.current = true;
-      window.requestAnimationFrame(updateNav);
+      window.requestAnimationFrame(() => {
+        updateNavFromScroll(getScrollY());
+        tickingRef.current = false;
+      });
     };
 
-    lastScrollYRef.current = window.scrollY;
-    updateNav();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    const onTouchStart = (event: TouchEvent) => {
+      touchStartYRef.current = event.touches[0]?.clientY ?? 0;
+    };
+
+    const onTouchMove = (event: TouchEvent) => {
+      if (!window.matchMedia("(hover: none) and (pointer: coarse)").matches) return;
+
+      const touchY = event.touches[0]?.clientY;
+      if (touchY == null) return;
+
+      const touchDelta = touchY - touchStartYRef.current;
+      touchStartYRef.current = touchY;
+
+      const scrollY = getScrollY();
+      if (scrollY <= NAV_SCROLL_THRESHOLD) return;
+
+      setIsAtTop(false);
+
+      // Finger down = content scrolls up = show chrome (Safari-style).
+      if (touchDelta > NAV_SCROLL_DELTA) {
+        setNavHidden(false);
+      } else if (touchDelta < -NAV_SCROLL_DELTA) {
+        setNavHidden(true);
+      }
+    };
+
+    let lastViewportHeight = window.visualViewport?.height ?? window.innerHeight;
+    const onViewportChange = () => {
+      const nextHeight = window.visualViewport?.height ?? window.innerHeight;
+      if (Math.abs(nextHeight - lastViewportHeight) > 40) {
+        lastScrollYRef.current = getScrollY();
+        lastViewportHeight = nextHeight;
+      }
+      scheduleScrollUpdate();
+    };
+
+    lastScrollYRef.current = getScrollY();
+    isNavHiddenRef.current = false;
+    updateNavFromScroll(lastScrollYRef.current);
+
+    window.addEventListener("scroll", scheduleScrollUpdate, { passive: true });
+    window.addEventListener("touchstart", onTouchStart, { passive: true });
+    window.addEventListener("touchmove", onTouchMove, { passive: true });
+    window.visualViewport?.addEventListener("resize", onViewportChange, { passive: true });
+    window.visualViewport?.addEventListener("scroll", scheduleScrollUpdate, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", scheduleScrollUpdate);
+      window.removeEventListener("touchstart", onTouchStart);
+      window.removeEventListener("touchmove", onTouchMove);
+      window.visualViewport?.removeEventListener("resize", onViewportChange);
+      window.visualViewport?.removeEventListener("scroll", scheduleScrollUpdate);
+    };
   }, [pathname]);
 
   const navHidden = isNavHidden && !isMobileMenuOpen;
