@@ -48,7 +48,7 @@ export function ContactPageContent({ locale = DEFAULT_LOCALE }: ContactPageConte
         </p>
       </section>
 
-      <section className="contact-direct-cards" aria-label={dictionary.common.finalActions}>
+      <section className="contact-direct-cards" aria-label={contact.schedulingCards.sectionLabel}>
         <a className="contact-direct-card" href={siteVisitUrl} target="_blank" rel="noreferrer">
           <svg viewBox="0 0 24 24" aria-hidden>
             <path d="M12 21s6-6 6-11a6 6 0 0 0-12 0c0 5 6 11 6 11Z" />

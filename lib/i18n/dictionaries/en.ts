@@ -152,6 +152,7 @@ Please help me with options and pricing.`,
       },
     },
     schedulingCards: {
+      sectionLabel: "Schedule with MIRRAI",
       siteVisit: {
         title: "Book a Site Visit",
         body: "See MIRRAI in your space. Choose a time and we'll visit you on site.",

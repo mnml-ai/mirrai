@@ -11,7 +11,18 @@ body {
   background-color: #F5F3EF;
   color: #1A1A1A;
   scroll-behavior: smooth;
+  scroll-padding-top: var(--site-navbar-offset);
   overflow-x: hidden;
+}
+
+:root {
+  --site-navbar-offset: 4.6rem;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --site-navbar-offset: 5.75rem;
+  }
 }
 
 html[dir="rtl"],
@@ -865,7 +876,7 @@ html[dir="rtl"] :where(.uppercase, [class*="tracking-"]),
   align-items: stretch;
   overflow: hidden;
   isolation: isolate;
-  padding-top: 90px;
+  padding-top: calc(var(--site-navbar-offset) + 1rem);
   background: #f5f3ef;
 }
 
@@ -7254,10 +7265,12 @@ section.interaction-demo-section[data-try-me-style="gold-pulse"] .mirror-press-p
   width: min(104%, 730px);
 }
 
-.mirrai-custom-teaser-mirror-wrap {
-  top: -15%;
-  width: 280px;
-  height: 292px;
+@media (min-width: 1181px) {
+  .mirrai-custom-teaser-mirror-wrap {
+    top: -15%;
+    width: 280px;
+    height: 292px;
+  }
 }
 
 .mirrai-custom-teaser-features {
@@ -7369,14 +7382,64 @@ section.interaction-demo-section[data-try-me-style="gold-pulse"] .mirror-press-p
 }
 
 /* Final MIRRAI Custom morph pass — keep this after all custom teaser layout overrides. */
-.mirrai-custom-teaser .mirrai-custom-teaser-mirror-wrap {
-  top: -20%;
-  width: 330px;
-  height: 312px;
+@media (min-width: 1181px) {
+  .mirrai-custom-teaser .mirrai-custom-teaser-mirror-wrap {
+    top: -20%;
+    width: 330px;
+    height: 312px;
+  }
 }
 
 .mirrai-custom-teaser .mirrai-custom-teaser-mirror {
   animation: mirrai-custom-mirror-shape-cycle 11s ease-in-out infinite;
+}
+
+/* Tablet stacked layout (iPad portrait/landscape) — mirror on cabinet wall, clear of title */
+@media (min-width: 761px) and (max-width: 1180px) {
+  .mirrai-custom-teaser-card {
+    grid-template-columns: 1fr !important;
+    grid-template-areas:
+      "copy"
+      "visual"
+      "features"
+      "followup" !important;
+    gap: clamp(48px, 7vw, 64px);
+  }
+
+  .mirrai-custom-teaser-copy {
+    position: relative;
+    z-index: 2;
+    padding-bottom: clamp(12px, 2vw, 20px);
+  }
+
+  .mirrai-custom-teaser-visual {
+    width: 100%;
+    overflow: hidden;
+    margin-top: clamp(4px, 1vw, 12px);
+  }
+
+  .mirrai-custom-teaser-spec {
+    min-height: clamp(400px, 52vw, 500px);
+    overflow: hidden;
+  }
+
+  .mirrai-custom-teaser-scene {
+    bottom: 0;
+    width: min(100%, 640px);
+  }
+
+  .mirrai-custom-teaser .mirrai-custom-teaser-mirror-wrap {
+    top: 18%;
+    width: 297px;
+    height: 281px;
+    transform: translateX(-50%);
+    overflow: hidden;
+  }
+
+  .mirrai-custom-teaser .mirrai-custom-teaser-mirror {
+    transform: scale(0.9);
+    transform-origin: center center;
+  }
 }
 
 @keyframes mirrai-custom-mirror-shape-cycle {
@@ -8002,7 +8065,7 @@ section.interaction-demo-section[data-try-me-style="gold-pulse"] .mirror-press-p
   position: relative;
   width: min(1840px, 100%);
   margin: 0 auto;
-  padding: 84px 38px 16px;
+  padding: calc(var(--site-navbar-offset) + 1rem) 38px 16px;
 }
 
 .product-configurator-back {
@@ -10794,7 +10857,7 @@ section.interaction-demo-section[data-try-me-style="gold-pulse"] .mirror-press-p
   z-index: 2;
   width: min(38rem, 43vw);
   margin-left: clamp(52px, 9.4vw, 138px);
-  padding-top: 72px;
+  padding-top: calc(var(--site-navbar-offset) + 1.25rem);
 }
 
 [data-dir="rtl"] .faq-hero-copy {

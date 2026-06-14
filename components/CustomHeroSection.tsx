@@ -97,7 +97,7 @@ export default function CustomHeroSection({ locale = DEFAULT_LOCALE }: { locale?
         .custom-hero-section {
           background:
             radial-gradient(circle at 16% 24%, rgba(255, 252, 246, 0.94), rgba(245, 239, 229, 0.86) 35%, rgba(238, 229, 216, 0.78) 100%);
-          padding-top: 72px;
+          padding-top: calc(var(--site-navbar-offset) + 1rem);
           display: flex;
           align-items: stretch;
           color: #2b211c;
@@ -108,7 +108,7 @@ export default function CustomHeroSection({ locale = DEFAULT_LOCALE }: { locale?
           display: grid;
           grid-template-columns: 1fr;
           width: 100%;
-          min-height: min(705px, calc(100svh - 72px));
+          min-height: min(705px, calc(100svh - var(--site-navbar-offset) - 1rem));
         }
 
         .custom-hero-content {

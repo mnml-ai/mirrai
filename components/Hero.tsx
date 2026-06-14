@@ -334,7 +334,6 @@ export default function Hero({ locale = DEFAULT_LOCALE }: { locale?: Locale }) {
   const homeHeroTitleLine2 =
     "titleLine2" in dictionary.homeHero ? dictionary.homeHero.titleLine2 : "";
   const containerRef = useRef<HTMLElement>(null);
-  const heroProductImageRef = useRef<HTMLImageElement>(null);
   const mirrorUiRef = useRef<HTMLDivElement>(null);
   const mirrorUiInnerRef = useRef<HTMLDivElement>(null);
   const mirrorVideoRef = useRef<HTMLDivElement>(null);
@@ -578,7 +577,6 @@ export default function Hero({ locale = DEFAULT_LOCALE }: { locale?: Locale }) {
       >
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        ref={heroProductImageRef}
         src="/hero-product.png?v=20260531a"
         alt=""
         aria-hidden
