@@ -25,7 +25,12 @@ export default function CustomHeroSection({ locale = DEFAULT_LOCALE }: { locale?
             <p className="custom-hero-kicker">{dictionary.customPage.hero.kicker}</p>
 
             <h1 className="custom-hero-title">
-              {dictionary.customPage.hero.title}
+              {dictionary.customPage.hero.titleLines.map((line, index) => (
+                <span key={line}>
+                  {line}
+                  {index < dictionary.customPage.hero.titleLines.length - 1 ? <br /> : null}
+                </span>
+              ))}
             </h1>
 
             <p className="custom-hero-description">

@@ -75,8 +75,6 @@ html[dir="rtl"] :where(
 }
 
 [data-dir="rtl"] .hero-watch,
-[data-dir="rtl"] .custom-hero-actions,
-[data-dir="rtl"] .mirrai-custom-teaser-actions,
 [data-dir="rtl"] .homepage-final-cta-actions,
 [data-dir="rtl"] .designers-button {
   flex-direction: row-reverse;
@@ -94,6 +92,11 @@ html[dir="rtl"] :where(
 [data-dir="rtl"] .brief-phone-code-select {
   background-position: left 1rem center;
   padding-left: 2.5rem;
+  padding-right: 1rem;
+}
+
+[data-dir="rtl"] .brief-phone-code-display {
+  padding-left: 2.1rem;
   padding-right: 1rem;
 }
 
@@ -337,23 +340,28 @@ html[dir="rtl"] :where(
 }
 
 [data-dir="rtl"] .hero-shell .hero-copy {
-  left: 5.75vw !important;
-  max-width: 52vw;
+  left: clamp(1.25rem, 5.75vw, 4rem) !important;
+  max-width: min(52vw, 36rem);
   padding-inline: 0.35rem;
   text-align: right;
+  overflow: visible;
 }
 
 [data-dir="rtl"] .hero-shell .hero-copy .hero-label {
   font-size: 0.864rem !important;
+  white-space: normal;
+  text-wrap: balance;
 }
 
 [data-dir="rtl"] .hero-shell .hero-copy .hero-line {
-  font-size: clamp(2.35rem, 6.2vw, 5.1rem) !important;
+  font-size: clamp(2.35rem, 5.4vw, 4.65rem) !important;
   font-weight: 800 !important;
   letter-spacing: 0 !important;
   line-height: 1.08 !important;
   text-transform: none !important;
-  white-space: nowrap !important;
+  white-space: normal !important;
+  text-wrap: balance;
+  max-width: 100%;
 }
 
 [data-dir="rtl"] .hero-shell .hero-copy .hero-watch span {
@@ -413,6 +421,67 @@ html[dir="rtl"] :where(
 
 .site-navbar-desktop {
   display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 20000;
+  isolation: isolate;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.45rem 4.15vw;
+  pointer-events: none;
+  background: transparent;
+  border-bottom: 1px solid transparent;
+  box-shadow: none;
+  backdrop-filter: blur(0);
+  -webkit-backdrop-filter: blur(0);
+  transform: translate3d(0, 0, 0);
+  transition:
+    transform 360ms cubic-bezier(0.32, 0.72, 0, 1),
+    padding 280ms ease,
+    background-color 280ms ease,
+    border-color 280ms ease,
+    box-shadow 280ms ease,
+    backdrop-filter 280ms ease,
+    -webkit-backdrop-filter 280ms ease;
+}
+
+.site-navbar-desktop[data-at-top="false"]:not([data-hidden="true"]) {
+  padding-top: 0.85rem;
+  padding-bottom: 0.85rem;
+  background: rgba(255, 252, 246, 0.82);
+  border-bottom-color: rgba(141, 104, 64, 0.12);
+  box-shadow: 0 4px 24px rgba(43, 33, 28, 0.06);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.site-navbar-desktop[data-hidden="true"] {
+  transform: translate3d(0, -110%, 0);
+  pointer-events: none;
+}
+
+.site-navbar-desktop .nav-logo {
+  transition: width 280ms ease;
+}
+
+.site-navbar-desktop[data-at-top="false"]:not([data-hidden="true"]) .nav-logo {
+  --navbar-logo-width: clamp(10.5rem, 12vw, 13.5rem);
+}
+
+.site-navbar-desktop .nav-cta {
+  transition:
+    padding 280ms ease,
+    font-size 280ms ease,
+    background-color 300ms ease,
+    color 300ms ease,
+    box-shadow 300ms ease;
+}
+
+.site-navbar-desktop[data-at-top="false"]:not([data-hidden="true"]) .nav-cta {
+  font-size: 0.66rem !important;
+  padding: 0.52rem 1.55rem !important;
 }
 
 @media (min-width: 768px) {
@@ -422,6 +491,22 @@ html[dir="rtl"] :where(
 
   .site-navbar-desktop {
     display: flex;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-navbar-desktop,
+  .site-navbar-mobile,
+  .site-navbar-desktop .nav-logo,
+  .site-navbar-desktop .nav-cta,
+  .site-navbar-mobile .mobile-hero-logo {
+    transition: none;
+  }
+
+  .site-navbar-desktop[data-hidden="true"],
+  .site-navbar-mobile[data-hidden="true"] {
+    transform: none;
+    opacity: 0;
   }
 }
 
@@ -452,26 +537,64 @@ html[dir="rtl"] :where(
 }
 
 .mobile-hero-nav {
-  position: absolute;
-  inset: 0 0 auto;
-  z-index: 50;
-  height: 7.5rem;
-  pointer-events: none;
-}
-
-/* Sticky mobile nav on inner pages (not inside .mobile-hero) */
-main > nav.site-navbar-mobile.mobile-hero-nav {
-  position: sticky;
+  position: fixed;
   top: 0;
-  inset: auto;
+  left: 0;
+  right: 0;
+  z-index: 20000;
   width: 100%;
   min-height: 4.25rem;
   height: auto;
   padding-bottom: 0.35rem;
-  background: rgba(250, 247, 240, 0.94);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  z-index: 50;
+  pointer-events: none;
+  background: transparent;
+  border-bottom: 1px solid transparent;
+  box-shadow: none;
+  backdrop-filter: blur(0);
+  -webkit-backdrop-filter: blur(0);
+  transform: translate3d(0, 0, 0);
+  transition:
+    transform 360ms cubic-bezier(0.32, 0.72, 0, 1),
+    background-color 280ms ease,
+    border-color 280ms ease,
+    box-shadow 280ms ease,
+    backdrop-filter 280ms ease,
+    -webkit-backdrop-filter 280ms ease,
+    min-height 280ms ease;
+}
+
+.site-navbar-mobile[data-at-top="false"]:not([data-hidden="true"]) {
+  min-height: 3.75rem;
+  background: rgba(255, 252, 246, 0.82);
+  border-bottom-color: rgba(141, 104, 64, 0.12);
+  box-shadow: 0 4px 24px rgba(43, 33, 28, 0.06);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.site-navbar-mobile[data-hidden="true"] {
+  transform: translate3d(0, -110%, 0);
+  pointer-events: none;
+}
+
+.site-navbar-mobile[data-at-top="false"]:not([data-hidden="true"]) .mobile-hero-logo {
+  --navbar-logo-width: clamp(10rem, 44vw, 13rem);
+  top: 0.85rem;
+}
+
+.site-navbar-mobile[data-at-top="false"]:not([data-hidden="true"]) .mobile-hero-menu {
+  top: 0.95rem;
+}
+
+.site-navbar-mobile .mobile-hero-logo,
+.site-navbar-mobile .mobile-hero-menu {
+  transition: top 280ms ease;
+}
+
+.site-navbar-mobile .mobile-hero-logo {
+  transition:
+    top 280ms ease,
+    width 280ms ease;
 }
 
 .mobile-hero-logo {
@@ -1088,9 +1211,27 @@ main > nav.site-navbar-mobile.mobile-hero-nav {
   gap: 0.5rem;
 }
 
+.custom-page .brief-phone-code-picker {
+  position: relative;
+  min-width: 0;
+}
+
+.custom-page .brief-phone-code-display {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  padding: 0.92rem 2.1rem 0.92rem 1rem;
+  color: #2b211c;
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-size: 0.82rem;
+  pointer-events: none;
+}
+
 .custom-page .brief-phone-code-select {
   min-width: 0;
   padding-inline: 0.85rem 2.1rem;
+  color: transparent;
   text-overflow: ellipsis;
 }
 
@@ -11091,5 +11232,318 @@ section.interaction-demo-section[data-try-me-style="gold-pulse"] .mirror-press-p
   .terms-contact-list span {
     font-size: 0.9rem;
     line-height: 1.7;
+  }
+}
+
+/* ============================================================
+   MIRRAI Reveal Section — scroll-triggered turn-on reveal.
+   Default (no-JS / reduced-motion) state is fully revealed;
+   GSAP sets the "off" state on mount and scrubs to revealed.
+   ============================================================ */
+.mirrai-reveal-section {
+  position: relative;
+  color: #f4ece1;
+  isolation: isolate;
+  /* Cinematic dark room: warm pool behind the mirror (slightly right),
+     vertical wall gradient, deep base. */
+  background:
+    radial-gradient(78% 62% at 64% 40%, rgba(86, 60, 36, 0.6) 0%, rgba(33, 23, 14, 0) 62%),
+    linear-gradient(180deg, #1d160e 0%, #150f08 44%, #0b0704 100%);
+}
+
+/* Static ambient room — wall sheen, floor plane, vignette — so the dark
+   background never reads as flat or empty. Present from the very start. */
+.mirrai-reveal-room {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    /* faint side-wall sheen */
+    linear-gradient(
+      90deg,
+      rgba(255, 234, 206, 0.04) 0%,
+      rgba(255, 234, 206, 0) 26%,
+      rgba(255, 234, 206, 0) 74%,
+      rgba(255, 234, 206, 0.03) 100%
+    ),
+    /* floor plane: wall meets floor near the bottom third */
+    linear-gradient(
+      180deg,
+      transparent 58%,
+      rgba(63, 45, 29, 0.32) 78%,
+      rgba(17, 11, 7, 0.7) 100%
+    ),
+    /* cinematic vignette for depth */
+    radial-gradient(125% 105% at 50% 38%, transparent 52%, rgba(0, 0, 0, 0.6) 100%);
+}
+
+/* very subtle plaster-wall texture, barely perceptible */
+.mirrai-reveal-room::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    repeating-linear-gradient(
+      115deg,
+      rgba(255, 255, 255, 0.014) 0 1px,
+      transparent 1px 9px
+    );
+  opacity: 0.5;
+  mix-blend-mode: overlay;
+}
+
+/* Pinned via GSAP ScrollTrigger on desktop (position: fixed, immune to the
+   global overflow-x: hidden that would break position: sticky). */
+.mirrai-reveal-pin {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100vh;
+  height: 100svh;
+  padding: clamp(2rem, 5vw, 5rem) clamp(1.5rem, 5vw, 5.5rem);
+}
+
+/* Mirror is the hero object; the text is a narrower supporting column. */
+.mirrai-reveal-stage {
+  display: grid;
+  grid-template-columns: minmax(14rem, 21rem) auto;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(2rem, 5vw, 5.5rem);
+  width: min(100%, 1220px);
+}
+
+.mirrai-reveal-frame-col {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Wrapper for all warm "turn-on" light: backlight halo + floor reflection. */
+.mirrai-reveal-light {
+  position: absolute;
+  inset: -40% -46%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.mirrai-reveal-glow {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background:
+    radial-gradient(
+      closest-side,
+      rgba(236, 182, 108, 0.52) 0%,
+      rgba(196, 134, 68, 0.24) 46%,
+      transparent 74%
+    );
+  filter: blur(48px);
+}
+
+/* Warm light pooling on the floor beneath the mirror */
+.mirrai-reveal-floor-pool {
+  position: absolute;
+  left: 50%;
+  bottom: 12%;
+  width: 64%;
+  height: 16%;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(50% 50% at 50% 50%, rgba(224, 166, 96, 0.4), transparent 70%);
+  filter: blur(26px);
+}
+
+/* Premium mirror frame — large hero object */
+.mirrai-reveal-frame {
+  position: relative;
+  z-index: 1;
+  height: min(84vh, 700px);
+  aspect-ratio: 9 / 16;
+  border-radius: clamp(20px, 1.8vw, 30px);
+  padding: clamp(8px, 0.8vw, 13px);
+  background: linear-gradient(155deg, #3a2c20 0%, #1d150e 46%, #0c0805 100%);
+  box-shadow:
+    0 60px 120px -50px rgba(0, 0, 0, 0.9),
+    0 24px 60px -40px rgba(0, 0, 0, 0.8),
+    0 0 0 1px rgba(222, 180, 120, 0.22),
+    inset 0 1px 0 rgba(255, 238, 210, 0.18),
+    inset 0 0 0 1px rgba(0, 0, 0, 0.4);
+}
+
+.mirrai-reveal-screen {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: clamp(13px, 1.2vw, 20px);
+  background: #060403;
+}
+
+.mirrai-reveal-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+/* Glass / reflection overlay so the video feels behind real mirror glass */
+.mirrai-reveal-glass {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background:
+    linear-gradient(122deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0) 30%),
+    linear-gradient(300deg, rgba(255, 244, 224, 0.08) 0%, rgba(255, 244, 224, 0) 26%),
+    linear-gradient(0deg, rgba(8, 5, 3, 0.38) 0%, rgba(8, 5, 3, 0) 34%);
+  opacity: 0.6;
+}
+
+.mirrai-reveal-video-label {
+  position: absolute;
+  z-index: 3;
+  right: clamp(0.9rem, 1.4vw, 1.4rem);
+  bottom: clamp(0.9rem, 1.4vw, 1.4rem);
+  color: rgba(255, 255, 255, 0.92);
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.45);
+}
+
+[dir="rtl"] .mirrai-reveal-video-label {
+  right: auto;
+  left: clamp(0.9rem, 1.4vw, 1.4rem);
+}
+
+/* Dark reflective mirror glass that overlays the screen, then fades out */
+.mirrai-reveal-surface {
+  position: absolute;
+  inset: clamp(8px, 0.8vw, 13px);
+  z-index: 4;
+  border-radius: clamp(13px, 1.2vw, 20px);
+  background:
+    linear-gradient(118deg, rgba(255, 240, 214, 0.07) 0%, rgba(255, 240, 214, 0) 32%),
+    linear-gradient(150deg, rgba(58, 46, 34, 0.55) 0%, rgba(12, 8, 5, 0.94) 62%);
+  box-shadow: inset 0 0 0 1px rgba(214, 170, 110, 0.12);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Supporting text column — elegant, not dominant */
+.mirrai-reveal-copy {
+  max-width: 21rem;
+  text-align: left;
+}
+
+[dir="rtl"] .mirrai-reveal-copy {
+  text-align: right;
+}
+
+.mirrai-reveal-kicker {
+  margin: 0 0 0.95rem;
+  color: #d6a766;
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+[dir="rtl"] .mirrai-reveal-kicker {
+  letter-spacing: 0;
+}
+
+.mirrai-reveal-headline {
+  margin: 0 0 1.1rem;
+  color: #f7efe4;
+  font-family: var(--font-quote), Georgia, serif;
+  font-size: clamp(1.85rem, 2.8vw, 2.9rem);
+  font-weight: 500;
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+}
+
+[dir="rtl"] .mirrai-reveal-headline {
+  font-family: var(--font-arabic), system-ui, sans-serif;
+  font-weight: 800;
+  letter-spacing: 0;
+  line-height: 1.22;
+}
+
+.mirrai-reveal-subtitle {
+  margin: 0;
+  color: rgba(244, 236, 225, 0.68);
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-size: clamp(0.92rem, 1vw, 1.05rem);
+  line-height: 1.62;
+}
+
+@media (max-width: 767px) {
+  .mirrai-reveal-pin {
+    height: auto;
+    flex-direction: column;
+    gap: clamp(2rem, 7vw, 3rem);
+    padding: clamp(3.5rem, 12vw, 5.5rem) 1.5rem;
+  }
+
+  .mirrai-reveal-stage {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    gap: clamp(2.25rem, 8vw, 3.25rem);
+    text-align: center;
+  }
+
+  /* On mobile the mirror leads the composition, text follows below. */
+  .mirrai-reveal-frame-col {
+    order: 1;
+  }
+
+  .mirrai-reveal-copy {
+    order: 2;
+  }
+
+  .mirrai-reveal-frame {
+    height: min(66vh, 470px);
+  }
+
+  .mirrai-reveal-copy,
+  [dir="rtl"] .mirrai-reveal-copy {
+    max-width: 24rem;
+    text-align: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mirrai-reveal-light {
+    opacity: 1;
+  }
+
+  .mirrai-reveal-surface {
+    opacity: 0;
+  }
+
+  .mirrai-reveal-frame {
+    transform: none;
+  }
+
+  .mirrai-reveal-video,
+  .mirrai-reveal-glass,
+  .mirrai-reveal-video-label,
+  .mirrai-reveal-kicker,
+  .mirrai-reveal-headline,
+  .mirrai-reveal-subtitle {
+    opacity: 1;
   }
 }

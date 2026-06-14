@@ -385,6 +385,15 @@ Please help me with options and pricing.`,
     productHighlights: "Product highlights",
     highlights: ["Smart TV", "Custom sizes", "Premium finish"],
   },
+  revealSection: {
+    ariaLabel: "MIRRAI turn-on reveal",
+    kicker: "The MIRRAI moment",
+    headline: "From reflection to experience",
+    subtitle:
+      "Watch MIRRAI come to life as the hidden screen appears inside the mirror.",
+    videoLabel: "Viewing mode",
+    scrollHint: "Scroll to reveal",
+  },
   mirrorUi: {
     date: "Sunday, May 12",
     weather: "Cloudy 24°C",
@@ -448,7 +457,7 @@ Please help me with options and pricing.`,
   customPage: {
     hero: {
       kicker: "BESPOKE BY MIRRAI",
-      title: "Create your custom MIRRAI",
+      titleLines: ["Create your custom MIRRAI"],
       descriptionLines: [
         "Tailored to your space, your style, and your needs.",
         "Choose the size, finish, lighting, and function.",

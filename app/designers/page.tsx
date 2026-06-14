@@ -228,12 +228,12 @@ export function DesignersPageContent({ locale = DEFAULT_LOCALE }: { locale?: Loc
           </p>
         </div>
         <div className="designers-trade-action">
-          <Link className="designers-button designers-button--filled" href="mailto:bd@odxstudio.com?subject=MIRRAI%20Trade%20Access">
+          <Link className="designers-button designers-button--filled" href="mailto:Mirrai@odxstudio.com?subject=MIRRAI%20Trade%20Access">
             {designersCopy.trade.cta}
             <span aria-hidden>{dictionary.common.arrow}</span>
           </Link>
           <p>
-            {designersCopy.trade.emailLead} <a href="mailto:bd@odxstudio.com">bd@odxstudio.com</a>
+            {designersCopy.trade.emailLead} <a href="mailto:Mirrai@odxstudio.com">Mirrai@odxstudio.com</a>
           </p>
         </div>
         <div className="designers-trade-media" aria-hidden>
@@ -643,12 +643,19 @@ export function DesignersPageContent({ locale = DEFAULT_LOCALE }: { locale?: Loc
         .designers-trade-action p {
           text-align: center;
           font-size: 0.82rem;
+          color: #2b211c;
+          margin-top: 1rem;
+          padding: 0.7rem 0.9rem;
+          border-radius: 6px;
+          background: rgba(255, 250, 244, 0.94);
+          box-shadow: 0 2px 14px rgba(43, 33, 28, 0.1);
         }
 
         .designers-trade-action a:not(.designers-button) {
-          color: #9c7046;
+          color: #6f4524;
           font-weight: 800;
-          text-decoration: none;
+          text-decoration: underline;
+          text-underline-offset: 0.14em;
         }
 
         .designers-trade-media {

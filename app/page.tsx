@@ -1,4 +1,5 @@
 import Hero from "@/components/Hero";
+import MirraiRevealSection from "@/components/MirraiRevealSection";
 import HomepageFaqPreview from "@/components/HomepageFaqPreview";
 import HomepageFaqSeparator from "@/components/HomepageFaqSeparator";
 import HomepageFinale from "@/components/HomepageFinale";
@@ -9,6 +10,9 @@ import ProductCollectionSection from "@/components/ProductCollectionSection";
 import ProfessionalPartnersSection from "@/components/ProfessionalPartnersSection";
 import { DEFAULT_LOCALE, type Locale } from "@/lib/i18n";
 import { createPageMetadata } from "@/lib/seo";
+
+/** Set to true to show the scroll-triggered MIRRAI turn-on reveal after the hero. */
+const SHOW_MIRRAI_REVEAL_SECTION = false;
 
 export const metadata = createPageMetadata({
   title: "Mirrai — More Than a Mirror",
@@ -22,6 +26,7 @@ export function HomePageContent({ locale = DEFAULT_LOCALE }: { locale?: Locale }
       <div id="home">
         <Hero locale={locale} />
       </div>
+      {SHOW_MIRRAI_REVEAL_SECTION ? <MirraiRevealSection locale={locale} /> : null}
       <MoonIntroChoice locale={locale} />
       <div
         aria-hidden

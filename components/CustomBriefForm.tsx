@@ -491,33 +491,38 @@ export default function CustomBriefForm({ locale = DEFAULT_LOCALE }: { locale?: 
             <label className="brief-field">
               <span className="brief-label">{formCopy.labels.phone} <em>*</em></span>
               <div className="brief-phone-group">
-                <select
-                  className="brief-select brief-phone-code-select"
-                  name="phoneCountryCode"
-                  value={selectedPhoneCountry.name}
-                  aria-label={formCopy.labels.phone}
-                  onChange={(event) => {
-                    const country = FORM_COUNTRIES.find((item) => item.name === event.target.value);
-                    if (country) {
-                      setSelectedPhoneCountry(country);
-                    }
-                  }}
-                >
-                  <optgroup label={formCopy.favorites}>
-                    {FAVORITE_COUNTRY_CODES.map((country) => (
-                      <option key={`favorite-${country.name}`} value={country.name}>
-                        {country.name} {country.code}
-                      </option>
-                    ))}
-                  </optgroup>
-                  <optgroup label={formCopy.allCountries}>
-                    {COUNTRY_CODES.map((country) => (
-                      <option key={country.name} value={country.name}>
-                        {country.name} {country.code}
-                      </option>
-                    ))}
-                  </optgroup>
-                </select>
+                <div className="brief-phone-code-picker">
+                  <span className="brief-phone-code-display" aria-hidden="true">
+                    {selectedPhoneCountry.code}
+                  </span>
+                  <select
+                    className="brief-select brief-phone-code-select"
+                    name="phoneCountryCode"
+                    value={selectedPhoneCountry.name}
+                    aria-label={formCopy.labels.phone}
+                    onChange={(event) => {
+                      const country = FORM_COUNTRIES.find((item) => item.name === event.target.value);
+                      if (country) {
+                        setSelectedPhoneCountry(country);
+                      }
+                    }}
+                  >
+                    <optgroup label={formCopy.favorites}>
+                      {FAVORITE_COUNTRY_CODES.map((country) => (
+                        <option key={`favorite-${country.name}`} value={country.name}>
+                          {country.name} {country.code}
+                        </option>
+                      ))}
+                    </optgroup>
+                    <optgroup label={formCopy.allCountries}>
+                      {COUNTRY_CODES.map((country) => (
+                        <option key={country.name} value={country.name}>
+                          {country.name} {country.code}
+                        </option>
+                      ))}
+                    </optgroup>
+                  </select>
+                </div>
                 <input name="phone" type="tel" placeholder={formCopy.placeholders.phone} required />
               </div>
             </label>
@@ -945,9 +950,27 @@ export default function CustomBriefForm({ locale = DEFAULT_LOCALE }: { locale?: 
           gap: 0.5rem;
         }
 
+        .brief-phone-code-picker {
+          position: relative;
+          min-width: 0;
+        }
+
+        .brief-phone-code-display {
+          position: absolute;
+          inset: 0;
+          display: flex;
+          align-items: center;
+          padding: 0.92rem 2.1rem 0.92rem 1rem;
+          color: #2b211c;
+          font-family: var(--font-body), system-ui, sans-serif;
+          font-size: 0.82rem;
+          pointer-events: none;
+        }
+
         .brief-phone-code-select {
           min-width: 0;
           padding-inline: 0.85rem 2.1rem;
+          color: transparent;
           text-overflow: ellipsis;
         }
 

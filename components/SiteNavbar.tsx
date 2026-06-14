@@ -1,6 +1,6 @@
 "use client";
 
-import { type Ref, useState } from "react";
+import { type Ref, useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import {
   getDictionary,
@@ -27,6 +27,8 @@ const MOBILE_LOGO_Y = 10;
 const MOBILE_MENU_BUTTON_SCALE = 0.9;
 const MOBILE_MENU_BUTTON_X = 4;
 const MOBILE_MENU_BUTTON_Y = -11;
+const NAV_SCROLL_THRESHOLD = 100;
+const NAV_SCROLL_DELTA = 8;
 
 function MirraiLogoTitle() {
   return (
@@ -50,6 +52,10 @@ type SiteNavbarProps = {
 
 export default function SiteNavbar({ ctaRef, variant = "all" }: SiteNavbarProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isAtTop, setIsAtTop] = useState(true);
+  const [isNavHidden, setIsNavHidden] = useState(false);
+  const lastScrollYRef = useRef(0);
+  const tickingRef = useRef(false);
   const pathname = usePathname();
   const locale = getLocaleFromPathname(pathname);
   const dictionary = getDictionary(locale);
@@ -83,10 +89,54 @@ export default function SiteNavbar({ ctaRef, variant = "all" }: SiteNavbarProps)
     },
   ];
 
+  useEffect(() => {
+    const updateNav = () => {
+      const scrollY = window.scrollY;
+      const delta = scrollY - lastScrollYRef.current;
+
+      if (scrollY < NAV_SCROLL_THRESHOLD) {
+        setIsAtTop(true);
+        setIsNavHidden(false);
+      } else {
+        setIsAtTop(false);
+
+        if (delta > NAV_SCROLL_DELTA) {
+          setIsNavHidden(true);
+        } else if (delta < 0) {
+          setIsNavHidden(false);
+        }
+      }
+
+      lastScrollYRef.current = scrollY;
+      tickingRef.current = false;
+    };
+
+    const onScroll = () => {
+      if (tickingRef.current) return;
+      tickingRef.current = true;
+      window.requestAnimationFrame(updateNav);
+    };
+
+    lastScrollYRef.current = window.scrollY;
+    updateNav();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [pathname]);
+
+  const navHidden = isNavHidden && !isMobileMenuOpen;
+  const navStateProps = {
+    "data-at-top": isAtTop,
+    "data-hidden": navHidden,
+  };
+
   return (
     <>
       {showMobile ? (
-        <nav className="mobile-hero-nav site-navbar-mobile" aria-label={dictionary.nav.mobile}>
+        <nav
+          className="mobile-hero-nav site-navbar-mobile"
+          aria-label={dictionary.nav.mobile}
+          {...navStateProps}
+        >
           <a
             className="mobile-hero-logo"
             href={getLocalizedHref("/#home", locale)}
@@ -155,19 +205,7 @@ export default function SiteNavbar({ ctaRef, variant = "all" }: SiteNavbarProps)
         <nav
           className="hero-nav site-navbar-desktop flex items-center justify-between"
           data-custom-page={isCustomPage}
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            right: 0,
-            zIndex: 20000,
-            isolation: "isolate",
-            paddingTop: "1.45rem",
-            paddingBottom: "1.45rem",
-            paddingLeft: "4.15vw",
-            paddingRight: "4.15vw",
-            pointerEvents: "none",
-          }}
+          {...navStateProps}
         >
         <a
           className="nav-logo flex-shrink-0 select-none"
