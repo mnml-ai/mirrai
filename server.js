@@ -1,25 +1,36 @@
-// Production entry point for Node hosting (e.g. Hostinger / Passenger).
-// Boots Next.js programmatically and listens on the port/socket provided by the host.
+// Production entry point for Hostinger / Passenger.
+// Hostinger hPanel: use start command `npm start` only — do NOT also set `next start`.
 const { existsSync } = require("node:fs");
 const { createServer } = require("node:http");
 const { join } = require("node:path");
 const next = require("next");
 
-// Resolve to this file's directory so Next finds .next/ and next.config
-// regardless of the working directory Passenger launches us from.
+const BOOT_KEY = "__MIRRAI_SERVER_BOOT__";
+
+if (global[BOOT_KEY]) {
+  console.log("[MIRRAI startup] Duplicate server.js load suppressed.");
+  module.exports = global[BOOT_KEY];
+  return;
+}
+
 const dir = __dirname;
 process.chdir(dir);
 
-// Passenger may pass a unix socket path (string) instead of a numeric port.
 const rawPort = process.env.PORT;
-const port = rawPort && /^\d+$/.test(rawPort) ? Number(rawPort) : rawPort || 3000;
+const numericPort =
+  rawPort && /^\d+$/.test(rawPort) ? Number(rawPort) : rawPort ? null : 3000;
+const listenTarget = numericPort ?? rawPort ?? 3000;
 const hostname = process.env.HOST || "0.0.0.0";
+const isPassengerSocket = typeof listenTarget === "string";
 
 const buildIdPath = join(dir, ".next", "BUILD_ID");
 const hasProductionBuild = existsSync(buildIdPath);
 
+console.log(`[MIRRAI startup] entry=server.js (custom Next handler)`);
 console.log(`[MIRRAI startup] dir=${dir}`);
-console.log(`[MIRRAI startup] PORT=${rawPort ?? "(unset)"} parsedPort=${port}`);
+console.log(
+  `[MIRRAI startup] PORT=${rawPort ?? "(unset)"} listenTarget=${listenTarget} passengerSocket=${isPassengerSocket}`
+);
 console.log(`[MIRRAI startup] NODE_ENV=${process.env.NODE_ENV || "unknown"}`);
 console.log(
   `[MIRRAI startup] production build ${hasProductionBuild ? "found" : "MISSING"} at ${buildIdPath}`
@@ -27,7 +38,7 @@ console.log(
 
 if (!hasProductionBuild) {
   console.error(
-    "[MIRRAI startup] No .next production build. Run `npm run build` during deploy (postinstall) before starting server.js."
+    "[MIRRAI startup] No .next production build. Run `npm run build` during deploy before starting."
   );
 }
 
@@ -77,27 +88,53 @@ function logShopifyEnvOnStartup() {
   }
 }
 
-app
+function listen(httpServer) {
+  return new Promise((resolve, reject) => {
+    httpServer.once("error", reject);
+
+    if (isPassengerSocket) {
+      httpServer.listen(listenTarget, () => {
+        console.log(`[MIRRAI startup] listening on Passenger socket ${listenTarget}`);
+        resolve();
+      });
+      return;
+    }
+
+    httpServer.listen(numericPort, hostname, () => {
+      console.log(
+        `[MIRRAI startup] listening on http://${hostname}:${numericPort} (use npm start — not next start)`
+      );
+      resolve();
+    });
+  });
+}
+
+const bootPromise = app
   .prepare()
   .then(() => {
     logShopifyEnvOnStartup();
 
-    const server = createServer((req, res) => handle(req, res));
+    const httpServer = createServer((req, res) => handle(req, res));
 
-    server.on("error", (err) => {
+    httpServer.on("error", (err) => {
       console.error("[MIRRAI startup] HTTP server error:", err);
       process.exit(1);
     });
 
-    server.listen(port, hostname, () => {
-      console.log(`MIRRAI ready (dir=${dir}, host=${hostname}, port=${port})`);
-    });
+    return listen(httpServer).then(() => ({
+      app,
+      httpServer,
+      handle,
+    }));
   })
   .catch((err) => {
-    console.error("Failed to start MIRRAI server:", err);
+    console.error("[MIRRAI startup] Failed to boot:", err);
     process.exit(1);
   });
 
+global[BOOT_KEY] = bootPromise;
+module.exports = bootPromise;
+
 process.on("unhandledRejection", (err) => {
-  console.error("Unhandled rejection in MIRRAI server:", err);
+  console.error("[MIRRAI startup] Unhandled rejection:", err);
 });

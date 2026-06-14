@@ -56,3 +56,26 @@ npm run dev
 ```bash
 npm run build
 ```
+
+## Hostinger production
+
+Use **one** startup path only. The repo is configured for a custom Next handler via `server.js`.
+
+**hPanel → Website → Deployments → Settings**
+
+| Setting | Value |
+|---------|--------|
+| Build command | `npm install` (runs conditional `postinstall` build) or `npm ci && npm run build` |
+| Start command | `npm start` |
+| Application startup file | leave empty, or `server.js` — **not both `next start` and `npm start`** |
+
+Do **not** set the start command to `next start` / `npm run start:next`. That boots a second Next.js process alongside `server.js` and causes duplicate `Ready in 0ms` logs and intermittent "This page couldn't load" errors until reload.
+
+Expected runtime log (single boot):
+
+```text
+[MIRRAI startup] entry=server.js (custom Next handler)
+[MIRRAI startup] listening on ...
+```
+
+If you see `▲ Next.js ... Ready in 0ms` twice at the same timestamp, Hostinger is still starting Next twice — fix the hPanel start command to `npm start` only.

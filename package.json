@@ -2,13 +2,13 @@
   "name": "smart-mirror",
   "version": "0.1.0",
   "private": true,
+  "main": "server.js",
   "scripts": {
     "dev": "next dev --webpack",
     "dev:turbo": "next dev",
     "build": "next build",
     "start": "node server.js",
-    "start:next": "next start",
-    "postinstall": "next build"
+    "postinstall": "node scripts/ensure-production-build.js"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
